@@ -224,8 +224,10 @@ public final class MockMacServer: @unchecked Sendable {
                         }
                         try? await self.restartControl()
                     }
-                } catch {
+                } catch let error as PairingError {
                     if !error.fromPeer { connection.send(machine.failureFrame(error.reason)) }
+                } catch {
+                    connection.cancel()
                 }
             }
         }
