@@ -60,7 +60,7 @@ jobs:
       - name: Build
         working-directory: ${{ matrix.dir }}
         run: |
-          xcodebuild build \
+          xcodebuild build -quiet \
             -project "${{ matrix.project }}" \
             -scheme "${{ matrix.scheme }}" \
             -destination "${{ matrix.destination }}" \
