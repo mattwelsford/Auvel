@@ -1,6 +1,15 @@
 # Phase 2 architecture · G2 review packet
 
-Status: ready for review.
+Status: **G2 approved 2026-10-16.**
+
+## G2 decision log
+
+| Code | Decision |
+|---|---|
+| D9 | Protocol spec, threat model and ADR-001 to ADR-007 approved. |
+| D10 | I06 copy change approved. |
+| Q7 | Create `main` from the working branch. Matt sets it as default and adds branch protection. |
+| Q8 | Bundle IDs use Matt's company Touchbase: `nz.co.touchbase.auvel` (iPhone) and `nz.co.touchbase.auvel.mac` (Mac), from touchbase.co.nz. |
 
 ## G2 evidence
 

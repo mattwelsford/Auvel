@@ -32,7 +32,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: Auvel
-        PRODUCT_BUNDLE_IDENTIFIER: com.mattwelsford.auvel.mac
+        PRODUCT_BUNDLE_IDENTIFIER: nz.co.touchbase.auvel.mac
         MARKETING_VERSION: 0.1.0
         CURRENT_PROJECT_VERSION: 1
         SWIFT_VERSION: "6.0"
