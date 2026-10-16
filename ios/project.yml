@@ -29,6 +29,7 @@ targets:
         NSLocalNetworkUsageDescription: Auvel uses your local network to find and control your Mac. Nothing leaves your network.
         NSBonjourServices:
           - _auvel._tcp
+          - _auvel-pair._tcp
         ITSAppUsesNonExemptEncryption: false
     settings:
       base:

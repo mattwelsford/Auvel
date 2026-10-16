@@ -16,7 +16,7 @@ jobs:
     name: Shared package (build + test)
     runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Select newest stable Xcode
         run: |
           XCODE=$(ls -d /Applications/Xcode_*.app | grep -vi beta | sort -V | tail -1)
@@ -46,7 +46,7 @@ jobs:
             scheme: Auvel
             destination: generic/platform=iOS Simulator
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Select newest stable Xcode
         run: |
           XCODE=$(ls -d /Applications/Xcode_*.app | grep -vi beta | sort -V | tail -1)

@@ -28,6 +28,7 @@ targets:
         NSLocalNetworkUsageDescription: Auvel uses your local network to receive commands from your paired iPhone.
         NSBonjourServices:
           - _auvel._tcp
+          - _auvel-pair._tcp
     settings:
       base:
         PRODUCT_NAME: Auvel

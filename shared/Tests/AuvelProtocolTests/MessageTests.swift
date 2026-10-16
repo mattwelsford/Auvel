@@ -156,8 +156,9 @@ struct FrameCodecTests {
         }
     }
 
-    @Test("Bonjour service type matches the Info.plist entry")
-    func bonjourServiceType() {
+    @Test("Bonjour service types match the Info.plist entries")
+    func bonjourServiceTypes() {
         #expect(Bonjour.serviceType == "_auvel._tcp")
+        #expect(Bonjour.pairingServiceType == "_auvel-pair._tcp")
     }
 }
