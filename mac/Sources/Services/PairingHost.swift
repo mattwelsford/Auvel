@@ -27,8 +27,11 @@ final class PairingHost {
     private var session: FramedConnection<PairFrame>?
     private var machine: PairingServer?
     private var expiryTimer: Timer?
+    /// A fixed code instead of a random one. Only set by the debug end-to-end test hook in AppModel.
+    private var fixedPasskey: Passkey?
 
-    func open() {
+    func open(fixedPasskey: Passkey? = nil) {
+        self.fixedPasskey = fixedPasskey
         guard listener == nil else { return }
         let listener: NWListener
         do {
@@ -61,7 +64,7 @@ final class PairingHost {
 
     private func newCode(failures: Int) {
         let expires = Date().addingTimeInterval(Self.lifetime)
-        phase = .showingCode(.random(), expires: expires, failures: failures)
+        phase = .showingCode(fixedPasskey ?? .random(), expires: expires, failures: failures)
         expiryTimer?.invalidate()
         expiryTimer = Timer.scheduledTimer(withTimeInterval: Self.lifetime, repeats: false) { [weak self] _ in
             MainActor.assumeIsolated { self?.close() }

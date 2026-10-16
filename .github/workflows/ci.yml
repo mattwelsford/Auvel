@@ -154,3 +154,84 @@ jobs:
           name: ios-test-results
           path: ios/TestResults.xcresult
           if-no-files-found: ignore
+
+  pairing-e2e:
+    name: Pairing end to end (iPhone simulator with real Mac app)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+      - name: Select newest stable Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -vi beta | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate projects
+        run: |
+          (cd mac && xcodegen generate)
+          (cd ios && xcodegen generate)
+      - name: Build Mac app (Debug, ad hoc signed)
+        working-directory: mac
+        run: |
+          xcodebuild build -quiet \
+            -project AuvelMac.xcodeproj -scheme AuvelMac -configuration Debug \
+            -destination generic/platform=macOS -derivedDataPath build \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=
+      - name: Launch Mac app with pairing open
+        working-directory: mac
+        run: |
+          APP=$(find build/Build/Products/Debug -maxdepth 1 -name '*.app' | head -1)
+          echo "Launching $APP"
+          open -n "$APP" --args -AuvelE2EPasskey 123456
+          sleep 5
+          pgrep -fl AuvelMac || { echo "::error::Mac app is not running"; exit 1; }
+          echo "Computer name: $(scutil --get ComputerName)"
+          dns-sd -B _auvel-pair._tcp & sleep 3; kill $! || true
+      - name: Pick the newest iPhone Pro simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          best = None
+          for runtime, devices in json.load(sys.stdin)["devices"].items():
+              if ".iOS-" not in runtime:
+                  continue
+              version = tuple(int(x) for x in runtime.split(".iOS-")[1].split("-"))
+              for d in devices:
+                  if d["name"].startswith("iPhone") and d["name"].endswith("Pro"):
+                      if best is None or version > best[0]:
+                          best = (version, d["udid"], d["name"])
+          print(best[1])
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Pair and connect from the simulator
+        working-directory: ios
+        run: |
+          export TEST_RUNNER_AUVEL_E2E_MAC_NAME="$(scutil --get ComputerName)"
+          xcodebuild test -quiet \
+            -project Auvel.xcodeproj -scheme Auvel \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -only-testing:AuvelUITests/RealMacUITests \
+            -resultBundlePath E2E.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Print test failures
+        if: failure()
+        working-directory: ios
+        run: |
+          [ -d E2E.xcresult ] || exit 0
+          xcrun xcresulttool get test-results tests --path E2E.xcresult --compact | python3 -c '
+          import json, sys
+          def walk(node, path):
+              name = node.get("name", "")
+              if node.get("nodeType") == "Failure Message":
+                  print(" / ".join(path), "->", name)
+              here = path + [name] if node.get("nodeType") in ("Test Case", "Test Suite") else path
+              for child in node.get("children", []):
+                  walk(child, here)
+          for node in json.load(sys.stdin).get("testNodes", []):
+              walk(node, [])
+          '
+      - name: Mac app log
+        if: always()
+        run: log show --last 15m --style compact --predicate 'process == "AuvelMac"' | grep -v "^Filtering" | tail -200

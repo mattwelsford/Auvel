@@ -42,6 +42,12 @@ final class AppModel {
         openAtLogin = LoginItem.isEnabled
         audio.start()
         reloadPairings()
+        #if DEBUG
+        // End-to-end CI test hook: `-AuvelE2EPasskey 123456` opens pairing at launch with that code.
+        if let code = UserDefaults.standard.string(forKey: "AuvelE2EPasskey"), let passkey = Passkey(string: code) {
+            pairing.open(fixedPasskey: passkey)
+        }
+        #endif
         pollTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             MainActor.assumeIsolated { self?.pollAccessibility() }
         }
@@ -103,7 +109,13 @@ final class AppModel {
     }
 
     private func reloadPairings() {
-        pairedPhones = (try? keychain.all()) ?? []
+        do {
+            pairedPhones = try keychain.all()
+        } catch {
+            NSLog("Auvel: could not read pairings: \(error)")
+            pairedPhones = []
+        }
+        NSLog("Auvel: \(pairedPhones.count) paired iPhone(s), restarting control listener")
         server.restart(keys: pairedPhones.map { PreSharedKey(deviceID: $0.peerID, key: $0.key) })
     }
 
