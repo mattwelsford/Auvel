@@ -1,0 +1,10 @@
+WCAG 2.1 contrast ratios for Auvel colour tokens, computed with the relative luminance formula.
+gold light on white                #B7801F vs #FFFFFF: 3.43:1
+gold light on canvas light         #B7801F vs #FBFAF7: 3.29:1
+goldText light on white            #94661A vs #FFFFFF: 5.03:1
+goldText light on canvas light     #94661A vs #FBFAF7: 4.82:1
+gold dark on #1C1C1E               #E3AC48 vs #1C1C1E: 8.31:1
+gold dark on canvas dark           #E3AC48 vs #0B0B0C: 9.61:1
+onGold on gold dark                #1A1204 vs #E3AC48: 9.06:1
+gold IC light on white             #8A5F12 vs #FFFFFF: 5.64:1
+gold IC dark on canvas dark        #F0BE62 vs #0B0B0C: 11.47:1

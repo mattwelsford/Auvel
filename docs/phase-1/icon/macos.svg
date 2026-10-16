@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d2721"/><stop offset="1" stop-color="#0e0c0a"/></linearGradient>
+    <linearGradient id="au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5cd7c"/><stop offset="1" stop-color="#c58d2b"/></linearGradient>
+    <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b8b8b8"/></linearGradient>
+  </defs>
+  <filter id="sh" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-opacity=".3"/></filter>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#bg)" filter="url(#sh)"/>
+  <rect x="100.5" y="100.5" width="823" height="823" rx="185" fill="none" stroke="#ffffff" stroke-opacity=".08"/>
+  <g transform="rotate(-18 478 520)">
+  <circle cx="478" cy="520" r="69" fill="url(#au)"/>
+  <g fill="none" stroke="url(#au)" stroke-linecap="round">
+  <path d="M586.0 391.3 A168.0 168.0 0 0 1 586.0 648.7" stroke-width="50"/>
+  <path d="M680.1 338.0 A272.0 272.0 0 0 1 680.1 702.0" stroke-width="45" opacity=".5"/>
+  <path d="M340.4 616.4 A168.0 168.0 0 0 1 340.4 423.6" stroke-width="35" opacity=".5"/>
+  </g></g>
+</svg>
