@@ -61,7 +61,7 @@ private actor TestClient {
         let connection = connection
         Task {
             for await event in connection.events {
-                await self.receive(event)
+                self.receive(event)
             }
         }
     }

@@ -76,7 +76,8 @@ final class RemoteFlowUITests: XCTestCase {
         app.buttons["Mute"].tap()
         XCTAssertTrue(waitForServer { self.server.state.muted }, "Mute not received")
 
-        app.adjustableElement.increment()
+        // The dial's vertical drag changes volume (XCUIElement has no increment action on iOS).
+        app.adjustableElement.swipeUp()
         XCTAssertTrue(waitForServer { self.server.receivedCommands.contains { if case .setVolume = $0 { true } else { false } } },
                       "Volume change not received")
     }

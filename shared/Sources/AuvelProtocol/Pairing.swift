@@ -57,6 +57,11 @@ public struct PairingError: Error, Equatable {
     public let reason: PairFailureReason
     /// True when the peer reported the failure, false when this side detected it.
     public let fromPeer: Bool
+
+    public init(reason: PairFailureReason, fromPeer: Bool) {
+        self.reason = reason
+        self.fromPeer = fromPeer
+    }
 }
 
 enum PairingCrypto {
