@@ -35,7 +35,32 @@ Rendering note: SF Pro and SF Symbols cannot be used in this Linux environment. 
 7. **R7 Privacy label.** "Data Not Collected" holds only if Sparkle's optional system-profile reporting stays off and no crash SDK is added. Xcode Organizer crash reports come from Apple's opt-in diagnostics and do not affect the label.
 8. **R8 Export compliance.** TLS through Network.framework uses OS-provided encryption, which qualifies for the standard exemption. Low risk. Answer at P6.
 
-## Decisions requested at G0
+## G0 decision log
+
+Matt's written answers, 2026-10-16.
+
+| Code | Decision | Note |
+|---|---|---|
+| D1 | **Direction B (Dial)** approved. | Overrides the recommendation of A. Conditions for P1 are in R10. |
+| D2 | Journey map approved. | |
+| D3 | **Open.** | Waiting on register and domain checks. Matt is allowing the hosts. |
+| D4 | v1 scope approved with the four changes listed below. | |
+| D5 | **Icon I1 (Signal)** approved. | Overrides the recommendation of I2. Must be redrawn at P1 to clear R9. |
+| Q1 | Price stays US$4.99. | |
+| Q3 | Matt holds touchbase.co.nz and kwa-moya.co.nz. Neither suits Aurem. A US-facing domain is needed. | Candidates to check: aurem.app, aurem.com, getaurem.com. auremapp.com is already in use (N2). |
+
+G0 status: **not passed**. D3 is the only open item.
+
+## Risks added after the decisions
+
+1. **R9 Icon I1 resembles an SF Symbol.** The Signal sketch is close to `dot.radiowaves.left.and.right`. Apple's SF Symbols licence does not allow symbols, or confusingly similar designs, in app icons or logos. App Review can also reject icons that look like Apple iconography. Fix at P1: keep the dot-and-arcs idea but make the form our own, for example arcs on one side only, uneven arc weights, or arcs shaped from the "A".
+2. **R10 Direction B accessibility and one-hand use.** The P0.3 comparison scored B lowest on these. These conditions apply at P1:
+   1. The ring also responds to a straight vertical drag anywhere on the dial, so volume works without tracing a circle.
+   2. The ring is one VoiceOver adjustable element (swipe up and down to change volume in 5% steps).
+   3. Haptic detent every 5% and a stronger one at 0% and 100%.
+   4. At the largest Dynamic Type sizes the volume numeral caps in size and the skip and mute buttons move into a row below the dial.
+
+## Decisions requested at G0 (original)
 
 1. **D1 Visual direction.** Recommend A (Control Center) with a larger play/pause tile. Alternatives: B (Dial), C (Surface).
 2. **D2 Journey map.** Approve J1–J12 and the fixes for X1–X24.
