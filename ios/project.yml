@@ -1,0 +1,43 @@
+# Generates Auvel.xcodeproj. Run `xcodegen generate` in this folder. See docs/phase-2/adr/ADR-001.
+name: Auvel
+options:
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+packages:
+  AuvelKit:
+    path: ../shared
+targets:
+  Auvel:
+    type: application
+    platform: iOS
+    sources:
+      - Sources
+    dependencies:
+      - package: AuvelKit
+        product: AuvelProtocol
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Auvel
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UIRequiresFullScreen: true
+        NSLocalNetworkUsageDescription: Auvel uses your local network to find and control your Mac. Nothing leaves your network.
+        NSBonjourServices:
+          - _auvel._tcp
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_NAME: Auvel
+        PRODUCT_BUNDLE_IDENTIFIER: com.mattwelsford.auvel
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        SWIFT_VERSION: "6.0"
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_STYLE: Automatic
+    scheme: {}

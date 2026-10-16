@@ -1,0 +1,41 @@
+# Generates AuvelMac.xcodeproj. Run `xcodegen generate` in this folder. See docs/phase-2/adr/ADR-001.
+name: AuvelMac
+options:
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+packages:
+  AuvelKit:
+    path: ../shared
+targets:
+  AuvelMac:
+    type: application
+    platform: macOS
+    sources:
+      - Sources
+    dependencies:
+      - package: AuvelKit
+        product: AuvelProtocol
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Auvel
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSUIElement: true
+        LSApplicationCategoryType: public.app-category.utilities
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSLocalNetworkUsageDescription: Auvel uses your local network to receive commands from your paired iPhone.
+        NSBonjourServices:
+          - _auvel._tcp
+    settings:
+      base:
+        PRODUCT_NAME: Auvel
+        PRODUCT_BUNDLE_IDENTIFIER: com.mattwelsford.auvel.mac
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        SWIFT_VERSION: "6.0"
+        ENABLE_HARDENED_RUNTIME: YES
+        ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_STYLE: Automatic
+    scheme: {}
