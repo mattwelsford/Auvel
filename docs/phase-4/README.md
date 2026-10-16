@@ -8,7 +8,7 @@ Status: automated tests built and running in CI. **Outstanding:** snapshot refer
 |---|---|---|---|
 | T1 | Unit tests with at least 80% line coverage of shared code | **Met.** 95.96% of lines, 64 tests in 13 suites | CI job "Shared package", step "Coverage report". The table is also in the run summary and the `shared-coverage` artifact. |
 | T2 | Protocol contract tests both sides run against | **Met.** Every fixture in `shared/Tests/AuvelProtocolTests/Fixtures` has a contract case, driven through `MacSessionLogic` and `ClientSessionLogic` | `shared/Tests/AuvelSessionTests/ContractTests.swift` |
-| T3 | UI tests for pairing, control and reconnect | Built. Each test has passed in CI at least once, but never all three in the same run (F21, F24). | `ios/Tests/UI/RemoteFlowUITests.swift` |
+| T3 | UI tests for pairing, control and reconnect | **Met.** All three pass in CI run 22, against the mock Mac found over Bonjour. Stability over more runs is still to be shown (F24). | `ios/Tests/UI/RemoteFlowUITests.swift` |
 | T4 | Snapshot tests of key screens, light, dark and AX5 | Built. 9 screens × 3 variants = 27 images recorded in CI. **Blocked on Q12** before they can be committed and compared. | `ios/Tests/Unit/SnapshotTests.swift` |
 | T5 | Mock Mac server for tests without hardware | **Met.** Pairing listener, TLS-PSK control listener, Bonjour advertising, scripted state and failures | `shared/Sources/AuvelTestSupport/MockMacServer.swift`, `shared/Tests/AuvelTestSupportTests/MockMacServerTests.swift` |
 | T6 | Manual hardware matrix | Checklist ready, needs Matt | [T6-hardware-matrix.md](T6-hardware-matrix.md) |
