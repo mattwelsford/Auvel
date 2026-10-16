@@ -11,3 +11,4 @@ Ideas outside the current phase's scope. Logged, not built.
 | B5 | Shortcuts / App Intents: "Pause my Mac". | P0.1 | Also enables Siri and the Action button. |
 | B6 | Apple Watch app. | P0.1 (Rimote user request) | Excluded by C6. |
 | B7 | Now Playing metadata. | F5 | Excluded by C5 and C6. Revisit only if Apple provides a public API. |
+| B8 | Mac advertises laptop or desktop in its TXT record so the iPhone shows the right icon. | P3 F17 | Apple silicon model identifiers do not say. The Mac can check for an internal battery. |

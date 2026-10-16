@@ -62,3 +62,25 @@ func macSymbol(for model: String) -> String {
     default: "laptopcomputer"
     }
 }
+
+/// Custom control surfaces (F12): Liquid Glass on iOS 26 and later, the G1 fill on iOS 18 to 25.
+struct AuvelSurface<S: Shape>: ViewModifier {
+    let shape: S
+    var inverted = false
+
+    func body(content: Content) -> some View {
+        if inverted {
+            content.background(Color(.label), in: shape)
+        } else if #available(iOS 26, *) {
+            content.glassEffect(.regular.interactive(), in: shape)
+        } else {
+            content.background(.fill.tertiary, in: shape)
+        }
+    }
+}
+
+extension View {
+    func auvelSurface<S: Shape>(_ shape: S, inverted: Bool = false) -> some View {
+        modifier(AuvelSurface(shape: shape, inverted: inverted))
+    }
+}

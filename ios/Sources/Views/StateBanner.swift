@@ -26,7 +26,7 @@ struct StateBanner: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(.fill.tertiary, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .auvelSurface(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .accessibilityElement(children: .contain)
             .transition(.opacity)
         }

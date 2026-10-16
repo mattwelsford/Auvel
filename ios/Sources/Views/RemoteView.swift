@@ -86,7 +86,7 @@ struct RemoteView: View {
             }
             .padding(.horizontal, 14)
             .frame(minHeight: 44)
-            .background(.fill.tertiary, in: Capsule())
+            .auvelSurface(Capsule())
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Mac: \(session.mac.peerName)")
@@ -97,7 +97,7 @@ struct RemoteView: View {
                 .font(.title3)
                 .foregroundStyle(.secondary)
                 .frame(width: 44, height: 44)
-                .background(.fill.tertiary, in: Circle())
+                .auvelSurface(Circle())
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Settings")
@@ -190,7 +190,7 @@ private struct RoundButton: View {
                     .font(.title2)
                     .foregroundStyle(inverted ? Color.canvas : Color(.label))
                     .frame(width: 72, height: 72)
-                    .background(inverted ? AnyShapeStyle(Color(.label)) : AnyShapeStyle(.fill.tertiary), in: Circle())
+                    .auvelSurface(Circle(), inverted: inverted)
                 if showLabel {
                     Text(label).font(.body)
                 }
