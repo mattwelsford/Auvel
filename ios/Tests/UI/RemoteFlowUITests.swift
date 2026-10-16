@@ -1,0 +1,107 @@
+import AuvelProtocol
+import AuvelTestSupport
+import XCTest
+
+/// T3: pairing, control and reconnect, against the mock Mac (T5) running in the test process.
+/// The mock advertises over Bonjour like the real Mac, so the app finds it through the normal discovery path.
+@MainActor
+final class RemoteFlowUITests: XCTestCase {
+    private var server: MockMacServer!
+    private var app: XCUIApplication!
+    private var macName = ""
+
+    override func setUp() async throws {
+        continueAfterFailure = false
+        // A unique name so a real Mac on the same network cannot be picked by mistake.
+        macName = "Mock Mac \(Int.random(in: 1000...9999))"
+        server = MockMacServer(.init(
+            identity: .init(name: macName, model: "Mac15,3", appVersion: "1.0"),
+            advertise: true
+        ))
+        try await server.start()
+        app = XCUIApplication()
+        app.launchArguments = ["-AuvelResetForUITests"]
+        app.launch()
+    }
+
+    override func tearDown() async throws {
+        app?.terminate()
+        server?.stop()
+    }
+
+    /// Onboarding, discovery, pairing with the code, then the remote (I01 → I02 → I04 → I05 → I07 → I08).
+    private func pairThroughUI() {
+        app.buttons["It's Installed"].tap()
+        let next = app.buttons["Continue"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        next.tap()
+
+        let row = app.buttons[macName]
+        XCTAssertTrue(row.waitForExistence(timeout: 15), "Mock Mac not discovered over Bonjour")
+        row.tap()
+
+        app.typeText(server.configuration.passkey.description.replacingOccurrences(of: " ", with: ""))
+        let open = app.buttons["Open Remote"]
+        XCTAssertTrue(open.waitForExistence(timeout: 10), "Pairing did not complete")
+        open.tap()
+    }
+
+    private func waitForServer(_ condition: @escaping () -> Bool, timeout: TimeInterval = 5) -> Bool {
+        let deadline = Date().addingTimeInterval(timeout)
+        while Date() < deadline {
+            if condition() { return true }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+        }
+        return condition()
+    }
+
+    func testPairing() {
+        pairThroughUI()
+        XCTAssertTrue(app.buttons["Mac: \(macName)"].waitForExistence(timeout: 5))
+        XCTAssertEqual(server.pairedDeviceIDs.count, 1)
+    }
+
+    func testControl() {
+        pairThroughUI()
+        let play = app.buttons["Play or pause"]
+        XCTAssertTrue(play.waitForExistence(timeout: 10))
+        XCTAssertTrue(waitForServer { self.app.otherElements["Volume"].exists || self.app.adjustableElement.exists })
+
+        play.tap()
+        XCTAssertTrue(waitForServer { self.server.receivedCommands.contains(.command(.playPause)) }, "Play/pause not received")
+
+        app.buttons["Next track"].tap()
+        XCTAssertTrue(waitForServer { self.server.receivedCommands.contains(.command(.next)) }, "Next not received")
+
+        app.buttons["Mute"].tap()
+        XCTAssertTrue(waitForServer { self.server.state.muted }, "Mute not received")
+
+        app.adjustableElement.increment()
+        XCTAssertTrue(waitForServer { self.server.receivedCommands.contains { if case .setVolume = $0 { true } else { false } } },
+                      "Volume change not received")
+    }
+
+    func testReconnect() async throws {
+        pairThroughUI()
+        let play = app.buttons["Play or pause"]
+        XCTAssertTrue(play.waitForExistence(timeout: 10))
+
+        // The Mac's control service goes away and comes back on a new port, as after a Mac app restart.
+        try await server.restartControl()
+        XCTAssertTrue(waitForServer({ self.app.staticTexts["Can't reach \(self.macName)"].exists || play.isEnabled }, timeout: 10))
+
+        let reconnected = waitForServer({
+            play.isEnabled && !self.app.staticTexts["Can't reach \(self.macName)"].exists
+        }, timeout: 20)
+        XCTAssertTrue(reconnected, "Did not reconnect")
+        play.tap()
+        XCTAssertTrue(waitForServer { self.server.receivedCommands.contains(.command(.playPause)) })
+    }
+}
+
+private extension XCUIApplication {
+    /// The dial's ring: one adjustable element labelled "Volume".
+    var adjustableElement: XCUIElement {
+        descendants(matching: .any).matching(NSPredicate(format: "label == 'Volume'")).firstMatch
+    }
+}

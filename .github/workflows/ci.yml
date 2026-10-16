@@ -38,7 +38,7 @@ jobs:
           awk -v c="$LINES" 'BEGIN { exit (c >= 80) ? 0 : 1 }' || { echo "::error::Line coverage ${LINES}% is below 80%"; exit 1; }
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: shared-coverage
           path: shared/coverage.txt
@@ -81,3 +81,60 @@ jobs:
             -scheme "${{ matrix.scheme }}" \
             -destination "${{ matrix.destination }}" \
             CODE_SIGNING_ALLOWED=NO
+
+  ios-tests:
+    name: iPhone tests (snapshots T4, UI flows T3)
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v5
+      - name: Select newest stable Xcode
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -vi beta | sort -V | tail -1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Pick the newest iPhone Pro simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          best = None
+          for runtime, devices in json.load(sys.stdin)["devices"].items():
+              if ".iOS-" not in runtime:
+                  continue
+              version = tuple(int(x) for x in runtime.split(".iOS-")[1].split("-"))
+              for d in devices:
+                  if d["name"].startswith("iPhone") and d["name"].endswith("Pro"):
+                      if best is None or version > best[0]:
+                          best = (version, d["udid"], d["name"])
+          print(best[1])
+          print("Simulator:", best[2], best[0], file=sys.stderr)
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Test
+        working-directory: ios
+        run: |
+          xcodebuild test -quiet \
+            -project Auvel.xcodeproj \
+            -scheme Auvel \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Upload snapshots
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ios-snapshots
+          path: ios/Tests/Unit/__Snapshots__
+          if-no-files-found: ignore
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ios-test-results
+          path: ios/TestResults.xcresult
+          if-no-files-found: ignore

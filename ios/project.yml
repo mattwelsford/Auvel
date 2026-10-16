@@ -7,6 +7,9 @@ options:
 packages:
   AuvelKit:
     path: ../shared
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    from: 1.17.0
 targets:
   Auvel:
     type: application
@@ -45,4 +48,38 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         CODE_SIGN_STYLE: Automatic
-    scheme: {}
+    scheme:
+      testTargets:
+        - AuvelTests
+        - AuvelUITests
+      gatherCoverageData: true
+  # T4 snapshot tests. Hosted in the app so @testable import works.
+  AuvelTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests/Unit
+    dependencies:
+      - target: Auvel
+      - package: SnapshotTesting
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: nz.co.touchbase.auvel.tests
+  # T3 UI tests against the mock Mac (T5).
+  AuvelUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - Tests/UI
+    dependencies:
+      - target: Auvel
+      - package: AuvelKit
+        product: AuvelTestSupport
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: nz.co.touchbase.auvel.uitests
+        TEST_TARGET_NAME: Auvel

@@ -2,7 +2,15 @@ import SwiftUI
 
 @main
 struct AuvelApp: App {
-    @State private var model = AppModel()
+    @State private var model: AppModel
+
+    init() {
+        // UI tests (T3) start from a clean install: no pairings, no onboarding seen.
+        if ProcessInfo.processInfo.arguments.contains("-AuvelResetForUITests") {
+            AppModel.resetAllData()
+        }
+        _model = State(initialValue: AppModel())
+    }
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {

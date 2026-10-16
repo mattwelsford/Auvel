@@ -56,6 +56,13 @@ final class AppModel {
         selectInitialMac()
     }
 
+    /// Removes every pairing and setting. Used only by UI tests.
+    static func resetAllData() {
+        let keychain = PairingKeychain(service: "nz.co.touchbase.auvel.pairing")
+        for pairing in (try? keychain.all()) ?? [] { try? keychain.remove(peerID: pairing.peerID) }
+        if let domain = Bundle.main.bundleIdentifier { UserDefaults.standard.removePersistentDomain(forName: domain) }
+    }
+
     // MARK: Discovery
 
     /// Starts Bonjour browsing. The first call triggers the iOS Local Network prompt (I02 comes first).
