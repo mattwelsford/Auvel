@@ -11,7 +11,7 @@ G3 needs a screen recording on real hardware: pausing YouTube in Safari and chan
    (cd mac && xcodegen generate)
    (cd ios && xcodegen generate)
    ```
-3. Open `mac/AuvelMac.xcodeproj`. In the Auvel target, Signing & Capabilities, choose your team. Repeat in `ios/Auvel.xcodeproj`.
+3. Open `mac/AuvelMac.xcodeproj`. In the Auvel target, Signing & Capabilities, choose your team. Repeat in `ios/Auvel.xcodeproj`. No paid membership is needed for this: add your Apple Account in Xcode › Settings › Accounts and choose its **Personal Team**. iPhone builds signed this way expire after 7 days. Re-run from Xcode to renew.
 4. Plug in the iPhone, trust the Mac, and turn on Developer Mode on the iPhone (Settings › Privacy & Security › Developer Mode).
 
 ## 2. Run

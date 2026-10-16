@@ -1,6 +1,15 @@
 # Phase 3 build · G3 review packet
 
-Status: code complete and building in CI. **G3 evidence (hardware recording) is outstanding** and needs Matt: see [hardware-test.md](hardware-test.md).
+Status: code complete and building in CI.
+
+## Decision log
+
+| Code | Decision |
+|---|---|
+| Q9 | Copyright holder is Matt Welsford. `LICENSE` and the Mac About box already say so. |
+| Q10 | No Apple Developer membership yet. Matt will enrol as an individual. The App Store seller name will be Matt Welsford. Steps in [accounts.md](../accounts.md). |
+| Q11 | Request the user-assigned device name entitlement from Apple once enrolled. |
+ **G3 evidence (hardware recording) is outstanding** and needs Matt: see [hardware-test.md](hardware-test.md).
 
 ## What was built
 
