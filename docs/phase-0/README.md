@@ -1,6 +1,8 @@
 # Phase 0 concept · G0 review packet
 
-Status: ready for review. No production code written.
+Product name: **Auvel** (was Aurem, renamed at G0 after the US trademark check, see D3). App Store name: "Auvel — Remote for Mac". Sections below that describe the Aurem name check keep the old name on purpose.
+
+Status: **G0 criteria met** (all decisions answered in writing 2026-10-16). Waiting on Matt's go-ahead to start Phase 1. No production code written.
 
 | Item | Deliverable | State |
 |---|---|---|
@@ -21,7 +23,7 @@ Rendering note: SF Pro and SF Symbols cannot be used in this Linux environment. 
 5. **F5** Without MediaRemote (C5) the apps cannot know play state or which app receives the media key. Play/pause is one toggle. The UI never says "Playing".
 6. **F6** Media keys go to whichever app macOS considers the current Now Playing app. If Music was last active, the key may start Music instead of pausing YouTube.
 7. **F7** CoreAudio cannot set volume on outputs without a software volume control, common on HDMI and DisplayPort displays. The design needs a "volume not adjustable here" state.
-8. **F8** Homebrew's main cask repo requires notability: for a self-submitted project, 225 stars, 90 forks or 90 watchers, and a repo at least 30 days old ([policy](https://docs.brew.sh/Package-Acceptance-Policy)). v1 ships from our own tap: `brew install --cask mattwelsford/aurem/aurem`. That still meets the done criterion.
+8. **F8** Homebrew's main cask repo requires notability: for a self-submitted project, 225 stars, 90 forks or 90 watchers, and a repo at least 30 days old ([policy](https://docs.brew.sh/Package-Acceptance-Policy)). v1 ships from our own tap: `brew install --cask mattwelsford/auvel/auvel`. That still meets the done criterion.
 9. **F9** Sleep ends the session and v1 cannot wake the Mac.
 
 ## Risks
@@ -43,18 +45,18 @@ Matt's written answers, 2026-10-16.
 |---|---|---|
 | D1 | **Direction B (Dial)** approved. | Overrides the recommendation of A. Conditions for P1 are in R10. |
 | D2 | Journey map approved. | |
-| D3 | **Open. Name fails US clearance.** | Checks run 2026-10-16. Live US application AUREM in Class 9 for a mobile app (N1). NZ clear. aurem.app, aurem.com, getaurem.com all taken. Options O-n1 to O-n3 in [P0.5](P0.5-name-and-icon.md#options). |
+| D3 | **Rename to Auvel** approved. | Aurem failed US clearance (N1). Auvel passed USPTO, IPONZ, App Store and web screens ([P0.5](P0.5-name-and-icon.md#rename-screening-o-n1-chosen-2026-10-16)). Domain purchase and trademark filing deferred to just before launch (R11). |
 | D4 | v1 scope approved with the four changes listed below. | |
 | D5 | **Icon I1 (Signal)** approved. | Overrides the recommendation of I2. Must be redrawn at P1 to clear R9. |
 | Q1 | Price stays US$4.99. | |
 | Q3 | Matt holds touchbase.co.nz and kwa-moya.co.nz. Neither suits Aurem. A US-facing domain is needed. | Candidates to check: aurem.app, aurem.com, getaurem.com. auremapp.com is already in use (N2). |
 
-G0 status: **not passed**. D3 is the only open item and needs Q4.
+G0 status: **criteria met.** D1, D2, D3, D4 approved. D5 and Q1 answered.
 
 ## Questions added after the decisions
 
 1. **Q4** Name: rename now (O-n1, recommended), keep Aurem without US registration (O-n2), or consult an attorney first (O-n3)? **Answered: O-n1.**
-2. **Q5** New name: Auvel (recommended) or Murmo? See [rename screening](P0.5-name-and-icon.md#rename-screening-o-n1-chosen-2026-10-16).
+2. **Q5** New name: Auvel (recommended) or Murmo? **Answered: Auvel.** See [rename screening](P0.5-name-and-icon.md#rename-screening-o-n1-chosen-2026-10-16).
 
 ## Risks added after the decisions
 
@@ -64,6 +66,7 @@ G0 status: **not passed**. D3 is the only open item and needs Q4.
    2. The ring is one VoiceOver adjustable element (swipe up and down to change volume in 5% steps).
    3. Haptic detent every 5% and a stronger one at 0% and 100%.
    4. At the largest Dynamic Type sizes the volume numeral caps in size and the skip and mute buttons move into a row below the dial.
+3. **R11 Name protection deferred to pre-launch.** Until a domain is bought and a US application is filed, anyone can take getauvel.com or file AUVEL first. auvel.app was registered by an unknown party on 2026-09-09. A US intent-to-use filing costs about US$350 per class and fixes the priority date before launch. Re-run the P0.5 screens at P6 before filing. Not an App Review risk.
 
 ## Decisions requested at G0 (original)
 
