@@ -53,7 +53,8 @@ G0 status: **not passed**. D3 is the only open item and needs Q4.
 
 ## Questions added after the decisions
 
-1. **Q4** Name: rename now (O-n1, recommended), keep Aurem without US registration (O-n2), or consult an attorney first (O-n3)?
+1. **Q4** Name: rename now (O-n1, recommended), keep Aurem without US registration (O-n2), or consult an attorney first (O-n3)? **Answered: O-n1.**
+2. **Q5** New name: Auvel (recommended) or Murmo? See [rename screening](P0.5-name-and-icon.md#rename-screening-o-n1-chosen-2026-10-16).
 
 ## Risks added after the decisions
 

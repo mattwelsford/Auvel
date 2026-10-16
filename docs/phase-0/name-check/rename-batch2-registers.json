@@ -1,0 +1,119 @@
+{
+ "Auvio": {
+  "name": "Auvio",
+  "usLive": 6,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Ovro": {
+  "name": "Ovro",
+  "usLive": 2,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Lumet": {
+  "name": "Lumet",
+  "usLive": 3,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Nuvel": {
+  "name": "Nuvel",
+  "usLive": 5,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Corva": {
+  "name": "Corva",
+  "usLive": 5,
+  "us9_42": [
+   "CORVA IROC (99841193, IC 042)",
+   "CORVA COPILOT (99112612, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Halden": {
+  "name": "Halden",
+  "usLive": 5,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Murmo": {
+  "name": "Murmo",
+  "usLive": 0,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Pauso": {
+  "name": "Pauso",
+  "usLive": 2,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Tavi": {
+  "name": "Tavi",
+  "usLive": 15,
+  "us9_42": [
+   "PRECISION TAVI (98018256, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Ellum": {
+  "name": "Ellum",
+  "usLive": 10,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Sorrel": {
+  "name": "Sorrel",
+  "usLive": 23,
+  "us9_42": [
+   "SORREL (50086437, IC 042)",
+   "SORREL (99776588, IC 042)",
+   "SORREL (50129219, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Quorra": {
+  "name": "Quorra",
+  "usLive": 4,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ }
+}

@@ -1,0 +1,193 @@
+{
+ "Ovra": {
+  "name": "Ovra",
+  "usLive": 1,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Auvel": {
+  "name": "Auvel",
+  "usLive": 0,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Aurio": {
+  "name": "Aurio",
+  "usLive": 5,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Pausa": {
+  "name": "Pausa",
+  "usLive": 7,
+  "us9_42": [
+   "LA PAUSA (79044095, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Tamber": {
+  "name": "Tamber",
+  "usLive": 19,
+  "us9_42": [
+   "TAMBER (99218364, IC 009/IC 042)",
+   "TAMBER (85731126, IC 042)",
+   "TAMBER (85750127, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Velora": {
+  "name": "Velora",
+  "usLive": 57,
+  "us9_42": [
+   "V VELORA (99552821, IC 042/IC 045/IC 009/IC 041)",
+   "VELORA (85106575, IC 042)",
+   "VELORA (99301681, IC 009/IC 036/IC 042)",
+   "VELORA (99204126, IC 042)",
+   "VELORA (99552812, IC 042/IC 009/IC 041/IC 045)",
+   "VELORA STUDIOS (85106643, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Halio": {
+  "name": "Halio",
+  "usLive": 8,
+  "us9_42": [
+   "HALIO (87979235, IC 009/IC 037/IC 042)",
+   "HALIO (87979405, IC 009/IC 037/IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Ambry": {
+  "name": "Ambry",
+  "usLive": 12,
+  "us9_42": [
+   "AMBRY CLASSIFI (98157118, IC 042/IC 044)",
+   "AMBRY (87154422, IC 035/IC 042/IC 044/IC 041)",
+   "AMBRY GENETICS (76292913, IC 001/IC 005/IC 042)",
+   "AMBRY CLASSIFI (98157113, IC 042/IC 044)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Lullo": {
+  "name": "Lullo",
+  "usLive": 2,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Tacit": {
+  "name": "Tacit",
+  "usLive": 19,
+  "us9_42": [
+   "TACIT (99137814, IC 045/IC 009/IC 010/IC 042/IC 044)",
+   "TACIT KNOWLEDGE (85880216, IC 042)",
+   "TACIT OBJECT MODELER (97406978, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Seren": {
+  "name": "Seren",
+  "usLive": 33,
+  "us9_42": [
+   "SEREN (98849866, IC 042)",
+   "SEREN (98849800, IC 042)",
+   "SERENDIP INNOVATIONS (79414532, IC 005/IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Ollo": {
+  "name": "Ollo",
+  "usLive": 29,
+  "us9_42": [
+   "OLLO (50044163, IC 009/IC 042)",
+   "OLLO (85468715, IC 038)",
+   "OLLO (50044177, IC 009/IC 042)",
+   "OLLO (99667816, IC 035/IC 037/IC 009/IC 042/IC 036)",
+   "OLLO (85976854, IC 038)",
+   "OLLO (85976855, IC 038)",
+   "OLLO (99672122, IC 042)"
+  ],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Quell": {
+  "name": "Quell",
+  "usLive": 43,
+  "us9_42": [
+   "QUELL (79342028, IC 009/IC 028/IC 041/IC 042)",
+   "QUELL (50158528, IC 044/IC 042/IC 005/IC 040)",
+   "QUELL (78937226, IC 042/IC 009/IC 037)",
+   "QUELL (99127927, IC 042)",
+   "QUELL (90298571, IC 042)",
+   "QUELL (88372290, IC 040/IC 005/IC 042/IC 044)",
+   "QUELL PROTECT (99230629, IC 042)",
+   "QUELL RECOVER (99230638, IC 042)",
+   "QUELL MONITOR (99230620, IC 042)",
+   "QUELLKIT (99612647, IC 042)",
+   "Q QUELL (78968450, IC 042/IC 009/IC 037)"
+  ],
+  "nz": [
+   "1038697 | QUELL | Registered | Kidde Australia Pty Ltd | 9, 35, 37"
+  ],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Kiru": {
+  "name": "Kiru",
+  "usLive": 2,
+  "us9_42": [],
+  "nz": [],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ },
+ "Orva": {
+  "name": "Orva",
+  "usLive": 3,
+  "us9_42": [
+   "ORVA (98378113, IC 042)",
+   "ORVA (99220319, IC 042)"
+  ],
+  "nz": [
+   "1313079 | Orva | Registered | ORVA LIMITED | 9"
+  ],
+  "apps": "ratelimited",
+  "com": "err",
+  "app": "err"
+ }
+}
