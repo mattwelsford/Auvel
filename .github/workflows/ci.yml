@@ -25,8 +25,24 @@ jobs:
           swift --version
       - name: Build
         run: swift build --package-path shared
-      - name: Test
-        run: swift test --package-path shared
+      - name: Test with coverage
+        run: swift test --package-path shared --enable-code-coverage
+      - name: Coverage report (T1, minimum 80% of lines in shared sources)
+        working-directory: shared
+        run: |
+          PROFDATA=$(find .build -name default.profdata | head -1)
+          BIN="$(swift build --show-bin-path)/AuvelKitPackageTests.xctest/Contents/MacOS/AuvelKitPackageTests"
+          xcrun llvm-cov report "$BIN" -instr-profile "$PROFDATA" -ignore-filename-regex='(Tests|\.build)/' | tee coverage.txt
+          LINES=$(awk '/^TOTAL/ {print $10}' coverage.txt | tr -d '%')
+          { echo "### Shared package line coverage: ${LINES}%"; echo '```'; cat coverage.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          awk -v c="$LINES" 'BEGIN { exit (c >= 80) ? 0 : 1 }' || { echo "::error::Line coverage ${LINES}% is below 80%"; exit 1; }
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-coverage
+          path: shared/coverage.txt
+          if-no-files-found: ignore
 
   app:
     name: ${{ matrix.name }} app (build)

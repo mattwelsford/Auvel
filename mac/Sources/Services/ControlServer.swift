@@ -1,4 +1,5 @@
 import AuvelProtocol
+import AuvelSession
 import AuvelTransport
 import Foundation
 import Network
@@ -104,14 +105,14 @@ final class ControlServer {
     fileprivate final class Session {
         let connection: FramedConnection<ClientFrame>
         private unowned let server: ControlServer
-        private(set) var phone: (id: UUID, name: String)?
+        private var logic = MacSessionLogic()
         private var nextID: UInt32 = 1
         private var idleTimer: Timer?
-        private var frameTimes: [Date] = []
         private var lastStateSent = Date.distantPast
         private var pendingState = false
 
-        var isAuthenticated: Bool { phone != nil }
+        var phone: (id: UUID, name: String)? { logic.phone }
+        var isAuthenticated: Bool { logic.isAuthenticated }
 
         init(connection: FramedConnection<ClientFrame>, server: ControlServer) {
             self.connection = connection
@@ -156,50 +157,26 @@ final class ControlServer {
             }
         }
 
+        /// Protocol decisions live in `MacSessionLogic` (shared, contract-tested). This performs them.
         private func handle(_ frame: ClientFrame) {
             resetIdleTimer()
-            let now = Date()
-            frameTimes = frameTimes.filter { now.timeIntervalSince($0) < 1 } + [now]
-            if frameTimes.count > 50 {
-                send(.failure(replyTo: frame.id, Failure(code: .rateLimited)))
-                connection.cancel()
-                return
-            }
-
-            guard isAuthenticated else {
-                guard case .hello(let hello) = frame.message else {
-                    send(.failure(replyTo: frame.id, Failure(code: .badRequest)))
+            let identity = MacIdentity(name: MacInfo.name, model: MacInfo.model, appVersion: MacInfo.appVersion)
+            let actions = logic.handle(frame, identity: identity) { [server] message in server.execute(message) }
+            for action in actions {
+                switch action {
+                case .send(let message):
+                    send(message)
+                case .sendState:
+                    sendState()
+                case .sendStateNow:
+                    lastStateSent = .distantPast
+                    sendState()
+                case .authenticated:
+                    server.publishConnected()
+                case .sleepSoon:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { SystemSleep.sleepNow() }
+                case .close:
                     connection.cancel()
-                    return
-                }
-                guard let version = ProtocolVersion.negotiate(client: hello.versions, server: ProtocolVersion.supported) else {
-                    send(.failure(replyTo: frame.id, Failure(code: .unsupportedVersion, minimumVersion: ProtocolVersion.supported.first)))
-                    connection.cancel()
-                    return
-                }
-                phone = (hello.deviceID, hello.deviceName)
-                send(.helloAck(HelloAck(version: version, macName: MacInfo.name, model: MacInfo.model, appVersion: MacInfo.appVersion)))
-                sendState()
-                server.publishConnected()
-                return
-            }
-
-            switch frame.message {
-            case .hello:
-                send(.failure(replyTo: frame.id, Failure(code: .badRequest)))
-            case .ping:
-                send(.pong)
-            case .getState:
-                lastStateSent = .distantPast
-                sendState()
-            case .sleep:
-                send(.ok(replyTo: frame.id))
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { SystemSleep.sleepNow() }
-            case .command, .setVolume, .setMuted:
-                if let error = server.execute(frame.message) {
-                    send(.failure(replyTo: frame.id, Failure(code: error)))
-                } else {
-                    send(.ok(replyTo: frame.id))
                 }
             }
         }

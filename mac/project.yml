@@ -21,6 +21,8 @@ targets:
         product: AuvelProtocol
       - package: AuvelKit
         product: AuvelTransport
+      - package: AuvelKit
+        product: AuvelSession
       - package: Sparkle
     info:
       path: Sources/Info.plist

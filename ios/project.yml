@@ -18,6 +18,8 @@ targets:
         product: AuvelProtocol
       - package: AuvelKit
         product: AuvelTransport
+      - package: AuvelKit
+        product: AuvelSession
     info:
       path: Sources/Info.plist
       properties:

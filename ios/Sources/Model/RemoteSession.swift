@@ -1,4 +1,5 @@
 import AuvelProtocol
+import AuvelSession
 import AuvelTransport
 import Foundation
 import Network
@@ -20,16 +21,18 @@ final class RemoteSession {
 
     let mac: StoredPairing
     private(set) var status: Status = .connecting
-    private(set) var state: MacState?
-    private(set) var macModel = ""
+    /// Protocol state for the current connection. Shared and contract-tested (T2).
+    private var logic = ClientSessionLogic()
+
+    var state: MacState? { logic.state }
+    var macModel: String { logic.macModel }
     /// Last error from a command, cleared on the next success.
-    private(set) var lastFailure: ErrorCode?
+    var lastFailure: ErrorCode? { logic.lastFailure }
 
     @ObservationIgnored private let deviceID: UUID
     @ObservationIgnored private let deviceName: String
     @ObservationIgnored private var connection: FramedConnection<MacFrame>?
     @ObservationIgnored private var nextID: UInt32 = 1
-    @ObservationIgnored private var helloID: UInt32 = 0
     @ObservationIgnored private var pingTimer: Timer?
     @ObservationIgnored private var retryTask: Task<Void, Never>?
     @ObservationIgnored private var retryDelay: Duration = .milliseconds(500)
@@ -80,6 +83,7 @@ final class RemoteSession {
             return
         }
         if status != .connected { status = .connecting }
+        logic = ClientSessionLogic()
         let parameters = TransportParameters.control(keys: [PreSharedKey(deviceID: deviceID, key: mac.key)])
         let connection = FramedConnection<MacFrame>(to: endpoint, using: parameters)
         self.connection = connection
@@ -138,30 +142,19 @@ final class RemoteSession {
 
     private func sendHello() {
         let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
-        helloID = send(.hello(Hello(versions: ProtocolVersion.supported, deviceID: deviceID, deviceName: deviceName, appVersion: appVersion)))
+        _ = send(logic.hello(id: nextID, deviceID: deviceID, deviceName: deviceName, appVersion: appVersion))
     }
 
     private func handle(_ frame: MacFrame) {
-        switch frame.message {
-        case .helloAck(let ack):
-            macModel = ack.model
+        switch logic.handle(frame) {
+        case .becameConnected:
             status = .connected
             retryDelay = .milliseconds(500)
             startPing()
-        case .state(let state):
-            self.state = state
-        case .ok:
-            lastFailure = nil
-        case .failure(let replyTo, let failure):
-            if replyTo == helloID, failure.code == .unsupportedVersion {
-                // The Mac reports its lowest version. Above ours means this app is the older one.
-                let macMinimum = failure.minimumVersion ?? 0
-                status = .updateRequired(macIsOlder: macMinimum <= ProtocolVersion.current)
-                tearDown()
-            } else {
-                lastFailure = failure.code
-            }
-        case .pong:
+        case .close:
+            if case .updateRequired(let macIsOlder) = logic.phase { status = .updateRequired(macIsOlder: macIsOlder) }
+            tearDown()
+        case .none:
             break
         }
     }
@@ -185,7 +178,7 @@ final class RemoteSession {
 
     func setMuted(_ muted: Bool) {
         guard isConnected else { return }
-        state?.muted = muted
+        logic.applyLocalMute(muted)
         _ = send(.setMuted(muted))
     }
 
@@ -198,8 +191,7 @@ final class RemoteSession {
     func setVolume(_ level: Double) {
         guard isConnected else { return }
         let level = min(max(level, 0), 1)
-        state?.volume = level
-        if state?.muted == true, level > 0 { state?.muted = false }
+        logic.applyLocalVolume(level)
         pendingVolume = level
         let wait = 0.05 - Date().timeIntervalSince(lastVolumeSent)
         if wait <= 0 {
@@ -218,5 +210,21 @@ final class RemoteSession {
         pendingVolume = nil
         lastVolumeSent = Date()
         _ = send(.setVolume(level))
+    }
+
+    // MARK: Previews and snapshot tests
+
+    /// A session with fixed status and state and no network, for snapshot tests (T4) and SwiftUI previews.
+    static func preview(mac: StoredPairing, status: Status, state: MacState?, model: String = "Mac15,3") -> RemoteSession {
+        let session = RemoteSession(mac: mac, deviceID: UUID(), deviceName: "iPhone") { nil }
+        var logic = ClientSessionLogic()
+        _ = logic.hello(id: 1, deviceID: UUID(), deviceName: "iPhone", appVersion: "1.0")
+        if status == .connected {
+            _ = logic.handle(MacFrame(id: 1, message: .helloAck(HelloAck(version: 1, macName: mac.peerName, model: model, appVersion: "1.0"))))
+        }
+        if let state { _ = logic.handle(MacFrame(id: 2, message: .state(state))) }
+        session.logic = logic
+        session.status = status
+        return session
     }
 }
