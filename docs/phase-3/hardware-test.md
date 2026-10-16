@@ -40,6 +40,8 @@ Record the Mac screen with QuickTime (File › New Screen Recording) and film th
 
 ## 4. Checks to record in the G3 notes
 
+In the same session, also fill in the Phase 4 checklists (Q13): [T6 hardware matrix](../phase-4/T6-hardware-matrix.md) and [T7 accessibility audit](../phase-4/T7-accessibility-audit.md).
+
 | Code | Check | How | Pass |
 |---|---|---|---|
 | H1 | Media keys reach Safari, Music, Spotify and Chrome | Play each, tap play/pause | Each pauses |

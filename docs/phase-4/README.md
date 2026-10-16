@@ -30,10 +30,9 @@ Status: automated tests built and running in CI. **Outstanding:** snapshot refer
 5. **F24 UI test timing.** Run 20 showed two test races. The reconnect test could tap Play before the app had noticed the dropped connection, so it now retries until the command arrives. Run 21 showed the same race in the control test: the remote appears before the session connects, so the test now waits for Play to be enabled. Bonjour discovery on a freshly booted simulator once took longer than 15 s, so the timeout is now 30 s. If discovery still flakes, the fallback is a debug-only launch argument that hands the app the mock's address directly.
 6. **F23 CI artifacts unreachable from the build session.** The session's network blocks GitHub's artifact storage (`*.blob.core.windows.net`). Snapshots recorded on the runner cannot be pulled back. See Q12.
 
-## Questions
+## Decision log
 
-1. **Q12** How should the 27 recorded snapshot images reach the repository?
-   - **O1 (recommended):** allow `*.blob.core.windows.net` in the environment's network settings. I download the `ios-snapshots` artifact and commit it.
-   - **O2:** download `ios-snapshots` from the latest CI run and commit the contents to `ios/Tests/Unit/__Snapshots__/`.
-   - **O3:** give the iPhone tests job `contents: write`, so CI pushes recorded images to a `ci/snapshots-*` branch.
-2. **Q13** Fill in T6 and T7 alongside the G3 hardware recording? Both use the same devices.
+| Code | Decision |
+|---|---|
+| Q12 | O1. Matt allows `*.blob.core.windows.net` so the session can pull the `ios-snapshots` artifact and commit it. |
+| Q13 | Yes. T6 and T7 are filled in during the G3 hardware session, on the same devices. |
