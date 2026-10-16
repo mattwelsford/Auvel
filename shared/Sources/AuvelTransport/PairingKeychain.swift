@@ -43,16 +43,31 @@ public struct PairingKeychain: Sendable {
     }
 
     public func all() throws -> [StoredPairing] {
+        // The macOS file-based keychain refuses data with kSecMatchLimitAll (errSecParam),
+        // so list the accounts first and read each item's data on its own.
         var query = baseQuery
-        query[kSecReturnData as String] = true
+        query[kSecReturnAttributes as String] = true
         query[kSecMatchLimit as String] = kSecMatchLimitAll
         var result: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         if status == errSecItemNotFound { return [] }
         guard status == errSecSuccess else { throw KeychainError.status(status) }
-        let items = (result as? [Data]) ?? []
-        return items.compactMap { try? JSONDecoder().decode(StoredPairing.self, from: $0) }
+        let accounts = ((result as? [[String: Any]]) ?? []).compactMap { $0[kSecAttrAccount as String] as? String }
+        return try accounts.compactMap { try data(account: $0) }
+            .compactMap { try? JSONDecoder().decode(StoredPairing.self, from: $0) }
             .sorted { $0.pairedAt < $1.pairedAt }
+    }
+
+    private func data(account: String) throws -> Data? {
+        var query = baseQuery
+        query[kSecAttrAccount as String] = account
+        query[kSecReturnData as String] = true
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        var result: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        if status == errSecItemNotFound { return nil }
+        guard status == errSecSuccess else { throw KeychainError.status(status) }
+        return result as? Data
     }
 
     public func save(_ pairing: StoredPairing) throws {

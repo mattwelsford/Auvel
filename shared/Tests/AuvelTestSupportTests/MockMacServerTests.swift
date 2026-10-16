@@ -89,7 +89,8 @@ private actor TestClient {
     func wait(until condition: @escaping @Sendable (ClientSessionLogic) -> Bool) async -> Bool {
         if condition(logic) { return true }
         let deadline = Task {
-            try? await Task.sleep(for: .seconds(5))
+            // A cancelled sleep throws. Only time out when the full 5 s passed.
+            guard (try? await Task.sleep(for: .seconds(5))) != nil else { return }
             self.timeout()
         }
         await withCheckedContinuation { waiters.append((condition, $0)) }
