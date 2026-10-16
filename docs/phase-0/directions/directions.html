@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Aurem remote directions</title>
+<style>
+  /* P0.3 directions. 402 x 874 pt (iPhone 16 Pro). Inter stands in for SF Pro, inline SVG stands in for SF Symbols. */
+  * { box-sizing:border-box; }
+  body { margin:0; padding:32px; background:#e9e9ee; font-family:Inter, system-ui, sans-serif; }
+  h1 { font-size:22px; margin:0 0 6px; } h2 { font-size:17px; margin:36px 0 4px; } p.r { margin:0 0 14px; color:#555; font-size:14px; max-width:860px; }
+  .row { display:flex; gap:28px; flex-wrap:wrap; }
+  .phone { width:402px; height:874px; border-radius:56px; position:relative; overflow:hidden; box-shadow:0 0 0 2px #000, 0 20px 40px rgba(0,0,0,.18); }
+  .island { position:absolute; top:11px; left:50%; transform:translateX(-50%); width:124px; height:36px; border-radius:20px; background:#000; z-index:5; }
+  .status { height:54px; display:flex; justify-content:space-between; align-items:center; padding:14px 34px 0; font-size:17px; font-weight:600; position:relative; z-index:4; }
+  .home { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:140px; height:5px; border-radius:3px; }
+  .ic { fill:currentColor; }
+  .picker { display:inline-flex; align-items:center; gap:8px; height:44px; padding:0 16px 0 14px; border-radius:22px; font-size:17px; font-weight:600; }
+  .iconbtn { width:44px; height:44px; border-radius:22px; display:flex; align-items:center; justify-content:center; }
+
+  /* ---------- Shared palette ---------- */
+  .light { --bg:#f2f2f7; --surface:#ffffff; --fill:rgba(120,120,128,.12); --fill2:rgba(120,120,128,.20); --label:#000; --label2:rgba(60,60,67,.6); --accent:#b7801f; --accentInk:#fff; --sep:rgba(60,60,67,.18); }
+  .dark  { --bg:#000; --surface:#1c1c1e; --fill:rgba(118,118,128,.24); --fill2:rgba(118,118,128,.36); --label:#fff; --label2:rgba(235,235,245,.6); --accent:#e3ac48; --accentInk:#1a1204; --sep:rgba(84,84,88,.6); }
+  .phone { background:var(--bg); color:var(--label); }
+  .home { background:var(--label); opacity:.85; }
+
+  /* ---------- A: Control Center tiles ---------- */
+  .A .grid { position:absolute; left:20px; right:20px; top:150px; display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+  .A .tile { background:var(--surface); border-radius:32px; display:flex; align-items:center; justify-content:center; }
+  .A.dark .tile { background:rgba(44,44,46,.92); }
+  .A .tile.big { grid-column:1 / span 2; height:250px; flex-direction:column; gap:10px; }
+  .A .tile.small { height:110px; }
+  .A .vol { position:absolute; left:20px; right:20px; bottom:58px; height:250px; border-radius:32px; background:var(--surface); overflow:hidden; display:flex; }
+  .A.dark .vol { background:rgba(44,44,46,.92); }
+  .A .volfill { position:absolute; left:0; top:0; bottom:0; width:62%; background:var(--accent); }
+  .A .shadow { box-shadow:0 1px 0 rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06); }
+  .A.dark .shadow { box-shadow:none; }
+
+  /* ---------- B: Dial ---------- */
+  .B { --bg:#fbfaf7; }
+  .B.dark { --bg:#0b0b0c; }
+  .B .ring { position:absolute; left:50%; top:452px; transform:translate(-50%,-50%); width:330px; height:330px; }
+  .B .disc { position:absolute; left:50%; top:452px; transform:translate(-50%,-50%); width:208px; height:208px; border-radius:50%; background:var(--surface); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,.10), inset 0 0 0 1px var(--sep); }
+  .B.dark .disc { background:#1c1c1e; box-shadow:inset 0 0 0 1px #2c2c2e; }
+  .B .bottom { position:absolute; left:0; right:0; bottom:64px; display:flex; justify-content:center; gap:28px; }
+  .B .rb { width:72px; height:72px; border-radius:36px; background:var(--fill); display:flex; align-items:center; justify-content:center; }
+
+  /* ---------- C: Surface ---------- */
+  .C.light { --bg:#f6f1e7; --panel:linear-gradient(170deg,#fffaf0 0%,#f1e3c4 100%); --label2:rgba(60,45,20,.6); }
+  .C.dark  { --bg:#08070a; --panel:linear-gradient(170deg,#2a2112 0%,#120e08 70%); }
+  .C .panel { position:absolute; left:12px; right:12px; top:112px; height:470px; border-radius:44px; background:var(--panel); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .C.light .panel { box-shadow: inset 0 0 0 1px rgba(183,128,31,.18); }
+  .C.dark .panel { box-shadow: inset 0 0 0 1px rgba(227,172,72,.16); }
+  .C .skip { position:absolute; bottom:22px; width:64px; height:64px; border-radius:32px; display:flex; align-items:center; justify-content:center; background:var(--fill); }
+  .C .volbar { position:absolute; left:20px; right:20px; bottom:58px; }
+  .C .track { height:76px; border-radius:38px; background:var(--fill); position:relative; overflow:hidden; }
+  .C .trackfill { position:absolute; left:0; top:0; bottom:0; width:62%; background:var(--accent); border-radius:38px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <symbol id="playpause" viewBox="0 0 40 28"><path d="M2 3.5 Q2 1.6 3.7 2.6 L19 12.2 Q20.6 13.3 19 14.3 L3.7 23.9 Q2 24.9 2 23 Z"/><rect x="24" y="3" width="5" height="21" rx="1.6"/><rect x="33" y="3" width="5" height="21" rx="1.6"/></symbol>
+  <symbol id="pause" viewBox="0 0 28 28"><rect x="6" y="3" width="6" height="22" rx="1.8"/><rect x="16" y="3" width="6" height="22" rx="1.8"/></symbol>
+  <symbol id="fwd" viewBox="0 0 34 24"><path d="M2 4 Q2 2.3 3.5 3.2 L15 10.6 Q16.4 11.6 15 12.6 L3.5 20 Q2 21 2 19.3 Z M17 4 Q17 2.3 18.5 3.2 L30 10.6 Q31.4 11.6 30 12.6 L18.5 20 Q17 21 17 19.3 Z"/></symbol>
+  <symbol id="back" viewBox="0 0 34 24"><g transform="translate(34,0) scale(-1,1)"><path d="M2 4 Q2 2.3 3.5 3.2 L15 10.6 Q16.4 11.6 15 12.6 L3.5 20 Q2 21 2 19.3 Z M17 4 Q17 2.3 18.5 3.2 L30 10.6 Q31.4 11.6 30 12.6 L18.5 20 Q17 21 17 19.3 Z"/></g></symbol>
+  <symbol id="spk" viewBox="0 0 32 26"><path d="M2 9 Q2 8 3 8 H8 L14.5 2.6 Q16 1.6 16 3.4 V22.6 Q16 24.4 14.5 23.4 L8 18 H3 Q2 18 2 17 Z"/><path d="M20.5 8.5 Q23 13 20.5 17.5 M24.5 5 Q29 13 24.5 21" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="spk1" viewBox="0 0 32 26"><path d="M2 9 Q2 8 3 8 H8 L14.5 2.6 Q16 1.6 16 3.4 V22.6 Q16 24.4 14.5 23.4 L8 18 H3 Q2 18 2 17 Z"/></symbol>
+  <symbol id="laptop" viewBox="0 0 30 22"><rect x="5" y="2" width="20" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M1.5 19.5 H28.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+  <symbol id="chev" viewBox="0 0 14 10"><path d="M2 2.5 L7 7.5 L12 2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="gear" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M10.3 1.8h3.4l.5 2.6a8 8 0 0 1 1.9.8l2.2-1.5 2.4 2.4-1.5 2.2c.35.6.6 1.2.8 1.9l2.6.5v3.4l-2.6.5a8 8 0 0 1-.8 1.9l1.5 2.2-2.4 2.4-2.2-1.5a8 8 0 0 1-1.9.8l-.5 2.6h-3.4l-.5-2.6a8 8 0 0 1-1.9-.8l-2.2 1.5-2.4-2.4 1.5-2.2a8 8 0 0 1-.8-1.9l-2.6-.5v-3.4l2.6-.5c.2-.7.45-1.3.8-1.9L3.3 6.1l2.4-2.4 2.2 1.5c.6-.35 1.2-.6 1.9-.8zM12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2z"/></symbol>
+</defs></svg>
+
+<h1>Aurem P0.3 main remote directions</h1>
+<p class="r">Each direction shows the same state: connected to "Matt's MacBook Pro", volume 62%. Play state is not shown because v1 has no Now Playing data (C5, C6), so play/pause is one toggle glyph. Left is light, right is dark. Accent is Aurem gold (light #B7801F, dark #E3AC48), both 4.5:1 or better against their background for text use.</p>
+
+<!-- ================= A ================= -->
+<h2>Direction A · Control Center</h2>
+<p class="r">Rationale: reuse the tile language iPhone owners already know from Control Center, so the remote feels like part of iOS on first sight.</p>
+<div class="row">
+<!-- A light / dark generated identically -->
+<div class="phone A light" id="a-light">
+  <div class="island"></div><div class="status"><span>9:41</span><span></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0">
+    <div class="picker" style="background:var(--fill)"><svg width="24" height="18" style="color:var(--label)"><use href="#laptop"/></svg>Matt's MacBook Pro<svg width="14" height="10" style="color:var(--label2)"><use href="#chev"/></svg></div>
+    <div class="iconbtn" style="background:var(--fill)"><svg width="22" height="22" class="ic" style="color:var(--label)"><use href="#gear"/></svg></div>
+  </div>
+  <div class="grid">
+    <div class="tile big shadow"><svg width="96" height="68" class="ic"><use href="#playpause"/></svg><span style="font-size:15px;color:var(--label2);font-weight:500">Play / Pause</span></div>
+    <div class="tile small shadow"><svg width="46" height="32" class="ic"><use href="#back"/></svg></div>
+    <div class="tile small shadow"><svg width="46" height="32" class="ic"><use href="#fwd"/></svg></div>
+  </div>
+  <div class="vol shadow"><div class="volfill"></div>
+    <div style="position:absolute;left:24px;top:22px;font-size:15px;font-weight:600;color:var(--accentInk)">Volume</div>
+    <div style="position:absolute;left:24px;bottom:18px;font-size:56px;font-weight:700;letter-spacing:-1px;color:var(--accentInk);font-variant-numeric:tabular-nums">62</div>
+    <div style="position:absolute;right:16px;top:16px;width:56px;height:56px;border-radius:28px;background:var(--fill2);display:flex;align-items:center;justify-content:center"><svg width="30" height="24" class="ic"><use href="#spk"/></svg></div>
+  </div>
+  <div class="home"></div>
+</div>
+<div class="phone A dark" id="a-dark">
+  <div class="island"></div><div class="status"><span>9:41</span><span></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0">
+    <div class="picker" style="background:var(--fill)"><svg width="24" height="18" style="color:var(--label)"><use href="#laptop"/></svg>Matt's MacBook Pro<svg width="14" height="10" style="color:var(--label2)"><use href="#chev"/></svg></div>
+    <div class="iconbtn" style="background:var(--fill)"><svg width="22" height="22" class="ic" style="color:var(--label)"><use href="#gear"/></svg></div>
+  </div>
+  <div class="grid">
+    <div class="tile big"><svg width="96" height="68" class="ic"><use href="#playpause"/></svg><span style="font-size:15px;color:var(--label2);font-weight:500">Play / Pause</span></div>
+    <div class="tile small"><svg width="46" height="32" class="ic"><use href="#back"/></svg></div>
+    <div class="tile small"><svg width="46" height="32" class="ic"><use href="#fwd"/></svg></div>
+  </div>
+  <div class="vol"><div class="volfill"></div>
+    <div style="position:absolute;left:24px;top:22px;font-size:15px;font-weight:600;color:var(--accentInk)">Volume</div>
+    <div style="position:absolute;left:24px;bottom:18px;font-size:56px;font-weight:700;letter-spacing:-1px;color:var(--accentInk);font-variant-numeric:tabular-nums">62</div>
+    <div style="position:absolute;right:16px;top:16px;width:56px;height:56px;border-radius:28px;background:var(--fill2);display:flex;align-items:center;justify-content:center"><svg width="30" height="24" class="ic"><use href="#spk"/></svg></div>
+  </div>
+  <div class="home"></div>
+</div>
+</div>
+
+<!-- ================= B ================= -->
+<h2>Direction B · Dial</h2>
+<p class="r">Rationale: one physical-feeling control, a volume ring around a play button, so the hand learns one gesture for everything that matters.</p>
+<div class="row">
+<div class="phone B light" id="b-light">
+  <div class="island"></div><div class="status"><span>9:41</span><span></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0">
+    <div class="picker"><svg width="24" height="18"><use href="#laptop"/></svg>Matt's MacBook Pro<svg width="14" height="10" style="color:var(--label2)"><use href="#chev"/></svg></div>
+    <div class="iconbtn"><svg width="22" height="22" class="ic" style="color:var(--label2)"><use href="#gear"/></svg></div>
+  </div>
+  <div style="position:absolute;top:150px;left:0;right:0;text-align:center"><div style="font-size:64px;font-weight:300;letter-spacing:-2px;font-variant-numeric:tabular-nums">62</div><div style="font-size:13px;letter-spacing:1.5px;color:var(--label2);font-weight:600">VOLUME</div></div>
+  <svg class="ring" viewBox="0 0 330 330">
+    <circle cx="165" cy="165" r="150" fill="none" stroke="var(--fill2)" stroke-width="22"/>
+    <circle cx="165" cy="165" r="150" fill="none" stroke="var(--accent)" stroke-width="22" stroke-linecap="round" stroke-dasharray="584 1000" transform="rotate(-90 165 165)"/>
+    <circle cx="165" cy="165" r="150" fill="none" stroke="var(--label)" stroke-opacity=".08" stroke-width="1" />
+    <g transform="rotate(223 165 165)"><circle cx="165" cy="15" r="17" fill="#fff" stroke="rgba(0,0,0,.12)"/></g>
+  </svg>
+  <div class="disc"><svg width="78" height="56" class="ic"><use href="#playpause"/></svg></div>
+  <div class="bottom">
+    <div class="rb"><svg width="34" height="24" class="ic"><use href="#back"/></svg></div>
+    <div class="rb"><svg width="32" height="26" class="ic"><use href="#spk"/></svg></div>
+    <div class="rb"><svg width="34" height="24" class="ic"><use href="#fwd"/></svg></div>
+  </div>
+  <div class="home"></div>
+</div>
+<div class="phone B dark" id="b-dark">
+  <div class="island"></div><div class="status"><span>9:41</span><span></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0">
+    <div class="picker"><svg width="24" height="18"><use href="#laptop"/></svg>Matt's MacBook Pro<svg width="14" height="10" style="color:var(--label2)"><use href="#chev"/></svg></div>
+    <div class="iconbtn"><svg width="22" height="22" class="ic" style="color:var(--label2)"><use href="#gear"/></svg></div>
+  </div>
+  <div style="position:absolute;top:150px;left:0;right:0;text-align:center"><div style="font-size:64px;font-weight:300;letter-spacing:-2px;font-variant-numeric:tabular-nums">62</div><div style="font-size:13px;letter-spacing:1.5px;color:var(--label2);font-weight:600">VOLUME</div></div>
+  <svg class="ring" viewBox="0 0 330 330">
+    <circle cx="165" cy="165" r="150" fill="none" stroke="var(--fill2)" stroke-width="22"/>
+    <circle cx="165" cy="165" r="150" fill="none" stroke="var(--accent)" stroke-width="22" stroke-linecap="round" stroke-dasharray="584 1000" transform="rotate(-90 165 165)"/>
+    <g transform="rotate(223 165 165)"><circle cx="165" cy="15" r="17" fill="#f2f2f2"/></g>
+  </svg>
+  <div class="disc"><svg width="78" height="56" class="ic"><use href="#playpause"/></svg></div>
+  <div class="bottom">
+    <div class="rb"><svg width="34" height="24" class="ic"><use href="#back"/></svg></div>
+    <div class="rb"><svg width="32" height="26" class="ic"><use href="#spk"/></svg></div>
+    <div class="rb"><svg width="34" height="24" class="ic"><use href="#fwd"/></svg></div>
+  </div>
+  <div class="home"></div>
+</div>
+</div>
+
+<!-- ================= C ================= -->
+<h2>Direction C · Surface</h2>
+<p class="r">Rationale: the top half of the screen is one play/pause target and the bottom is one volume bar, so it works without looking at the phone.</p>
+<div class="row">
+<div class="phone C light" id="c-light">
+  <div class="island"></div><div class="status"><span>9:41</span><span></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0">
+    <div class="picker" style="padding-left:4px"><svg width="24" height="18"><use href="#laptop"/></svg>Matt's MacBook Pro<svg width="14" height="10" style="color:var(--label2)"><use href="#chev"/></svg></div>
+    <div class="iconbtn"><svg width="22" height="22" class="ic" style="color:var(--label2)"><use href="#gear"/></svg></div>
+  </div>
+  <div class="panel">
+    <svg width="150" height="105" class="ic" style="color:var(--accent)"><use href="#playpause"/></svg>
+    <div style="margin-top:14px;font-size:20px;font-weight:600">Tap anywhere here</div>
+    <div style="margin-top:4px;font-size:15px;color:var(--label2)">Play / Pause</div>
+    <div class="skip" style="left:22px"><svg width="32" height="22" class="ic"><use href="#back"/></svg></div>
+    <div class="skip" style="right:22px"><svg width="32" height="22" class="ic"><use href="#fwd"/></svg></div>
+  </div>
+  <div class="volbar">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 6px 12px"><span style="font-size:17px;font-weight:600">Volume</span><span style="font-size:34px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums">62%</span></div>
+    <div class="track"><div class="trackfill"></div>
+      <svg width="30" height="24" class="ic" style="position:absolute;left:24px;top:26px;color:var(--accentInk)"><use href="#spk"/></svg>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:13px;color:var(--label2)">Tap the speaker to mute</div>
+  </div>
+  <div class="home"></div>
+</div>
+<div class="phone C dark" id="c-dark">
+  <div class="island"></div><div class="status"><span>9:41</span><span></span></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 20px 0">
+    <div class="picker" style="padding-left:4px"><svg width="24" height="18"><use href="#laptop"/></svg>Matt's MacBook Pro<svg width="14" height="10" style="color:var(--label2)"><use href="#chev"/></svg></div>
+    <div class="iconbtn"><svg width="22" height="22" class="ic" style="color:var(--label2)"><use href="#gear"/></svg></div>
+  </div>
+  <div class="panel">
+    <svg width="150" height="105" class="ic" style="color:var(--accent)"><use href="#playpause"/></svg>
+    <div style="margin-top:14px;font-size:20px;font-weight:600">Tap anywhere here</div>
+    <div style="margin-top:4px;font-size:15px;color:var(--label2)">Play / Pause</div>
+    <div class="skip" style="left:22px"><svg width="32" height="22" class="ic"><use href="#back"/></svg></div>
+    <div class="skip" style="right:22px"><svg width="32" height="22" class="ic"><use href="#fwd"/></svg></div>
+  </div>
+  <div class="volbar">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin:0 6px 12px"><span style="font-size:17px;font-weight:600">Volume</span><span style="font-size:34px;font-weight:700;letter-spacing:-.5px;font-variant-numeric:tabular-nums">62%</span></div>
+    <div class="track"><div class="trackfill"></div>
+      <svg width="30" height="24" class="ic" style="position:absolute;left:24px;top:26px;color:var(--accentInk)"><use href="#spk"/></svg>
+    </div>
+    <div style="text-align:center;margin-top:12px;font-size:13px;color:var(--label2)">Tap the speaker to mute</div>
+  </div>
+  <div class="home"></div>
+</div>
+</div>
+</body>
+</html>

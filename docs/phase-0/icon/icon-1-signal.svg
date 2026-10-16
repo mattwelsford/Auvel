@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Icon sketch 1 "Signal": a source dot with sound arcs on both sides. Reads as audio and as a remote signal. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2620"/><stop offset="1" stop-color="#0e0c0a"/></linearGradient>
+    <linearGradient id="au" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3c977"/><stop offset="1" stop-color="#c58d2b"/></linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="229" fill="url(#bg)"/>
+  <circle cx="512" cy="512" r="92" fill="url(#au)"/>
+  <g fill="none" stroke="url(#au)" stroke-linecap="round" stroke-width="64">
+    <path d="M352 352 A226 226 0 0 0 352 672"/>
+    <path d="M672 352 A226 226 0 0 1 672 672"/>
+    <path d="M250 250 A370 370 0 0 0 250 774" opacity=".55"/>
+    <path d="M774 250 A370 370 0 0 1 774 774" opacity=".55"/>
+  </g>
+</svg>

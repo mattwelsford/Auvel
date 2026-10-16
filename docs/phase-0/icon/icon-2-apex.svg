@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <!-- Icon sketch 2 "Apex": a play triangle turned upward to form an A. The crossbar is a volume level. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0c56c"/><stop offset="1" stop-color="#b47a1b"/></linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="229" fill="url(#bg)"/>
+  <path d="M512 210 Q536 210 548 232 L800 742 Q816 778 776 778 L248 778 Q208 778 224 742 L476 232 Q488 210 512 210 Z" fill="#fffaf0"/>
+  <rect x="300" y="584" width="424" height="56" rx="28" fill="#b47a1b"/>
+  <rect x="300" y="584" width="262" height="56" rx="28" fill="#3a2a0e"/>
+</svg>
