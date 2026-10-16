@@ -7,8 +7,8 @@ enum Accessibility {
 
     /// Adds Auvel to the Accessibility list so the user only has to flip the switch.
     static func registerWithSystem() {
-        let key = kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String
-        _ = AXIsProcessTrustedWithOptions([key: false] as CFDictionary)
+        // Value of kAXTrustedCheckOptionPrompt. The C global is not concurrency-safe in Swift 6.
+        _ = AXIsProcessTrustedWithOptions(["AXTrustedCheckOptionPrompt": false] as CFDictionary)
     }
 
     static func openSettings() {
