@@ -73,7 +73,8 @@ final class RemoteFlowUITests: XCTestCase {
         app.buttons["Next track"].tap()
         XCTAssertTrue(waitForServer { self.server.receivedCommands.contains(.command(.next)) }, "Next not received")
 
-        app.buttons["Mute"].tap()
+        // Mute carries the toggle trait (T7 V5), so XCUITest exposes it as a switch.
+        app.switches["Mute"].tap()
         XCTAssertTrue(waitForServer { self.server.state.muted }, "Mute not received")
 
         // The dial's vertical drag changes volume (XCUIElement has no increment action on iOS).
