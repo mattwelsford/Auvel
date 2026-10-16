@@ -7,6 +7,9 @@ options:
 packages:
   AuvelKit:
     path: ../shared
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.6.0
 targets:
   AuvelMac:
     type: application
@@ -16,6 +19,9 @@ targets:
     dependencies:
       - package: AuvelKit
         product: AuvelProtocol
+      - package: AuvelKit
+        product: AuvelTransport
+      - package: Sparkle
     info:
       path: Sources/Info.plist
       properties:
@@ -29,6 +35,11 @@ targets:
         NSBonjourServices:
           - _auvel._tcp
           - _auvel-pair._tcp
+        NSHumanReadableCopyright: Copyright © 2026 Matt Welsford. MIT licence.
+        # Sparkle (ADR-006). SUPublicEDKey is filled in by the release workflow; empty disables the updater.
+        SUFeedURL: https://getauvel.com/appcast.xml
+        SUPublicEDKey: ""
+        SUEnableAutomaticChecks: true
     settings:
       base:
         PRODUCT_NAME: Auvel
@@ -39,4 +50,5 @@ targets:
         ENABLE_HARDENED_RUNTIME: YES
         ENABLE_APP_SANDBOX: NO
         CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     scheme: {}

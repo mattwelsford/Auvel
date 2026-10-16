@@ -16,6 +16,8 @@ targets:
     dependencies:
       - package: AuvelKit
         product: AuvelProtocol
+      - package: AuvelKit
+        product: AuvelTransport
     info:
       path: Sources/Info.plist
       properties:
