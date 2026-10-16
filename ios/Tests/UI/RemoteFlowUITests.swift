@@ -67,6 +67,8 @@ final class RemoteFlowUITests: XCTestCase {
         let play = app.buttons["Play or pause"]
         XCTAssertTrue(play.waitForExistence(timeout: 10))
         XCTAssertTrue(waitForServer { self.app.otherElements["Volume"].exists || self.app.adjustableElement.exists })
+        // The remote appears before the session connects. Controls stay disabled until then.
+        XCTAssertTrue(waitForServer({ play.isEnabled }, timeout: 10), "Remote did not connect")
 
         play.tap()
         XCTAssertTrue(waitForServer { self.server.receivedCommands.contains(.command(.playPause)) }, "Play/pause not received")
