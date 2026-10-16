@@ -102,7 +102,7 @@ Notation: `PKc`, `PKm` are the client's and Mac's ephemeral P-256 public keys (X
 | 4b | Mac → Client | `pair_commit` | `round` i, `commitment` `Cmi = HMAC(Nmi, PKm ‖ PKc ‖ ri')` with fresh 128-bit `Nmi` |
 | 4c | Client → Mac | `pair_reveal` | `round` i, `nonce` `Nci`. Mac recomputes `Cci` with its own `ri`. Mismatch: fail. |
 | 4d | Mac → Client | `pair_reveal` | `round` i, `nonce` `Nmi`. Client recomputes `Cmi` with the typed `ri`. Mismatch: fail. |
-| 5 | Both | — | `T = SHA256` of every pairing payload so far, in order. `K = HKDF-SHA256(ikm: DHKey, salt: Nc20 ‖ Nm20, info: "auvel pairing v1" ‖ PKc ‖ PKm ‖ T, length: 32)` |
+| 5 | Both | — | `T = SHA256` over these fields in order, each prefixed with its 2-byte big-endian length: `device_id` (16 bytes), `device_name` (UTF-8), `PKc`, `mac_id`, `mac_name`, `PKm`, then for each round `Cci`, `Cmi`, `Nci`, `Nmi`. `K = HKDF-SHA256(ikm: DHKey, salt: Nc20 ‖ Nm20, info: "auvel pairing v1" ‖ PKc ‖ PKm ‖ T, length: 32)` |
 | 6 | Client → Mac | `pair_confirm` | `mac` = `HMAC(K, "client" ‖ T)`. Mac verifies. |
 | 7 | Mac → Client | `pair_confirm` | `mac` = `HMAC(K, "mac" ‖ T)`. Client verifies. |
 | 8 | Both | — | Store the peer's ID, name and `K` in the Keychain. Discard ephemeral keys. |
