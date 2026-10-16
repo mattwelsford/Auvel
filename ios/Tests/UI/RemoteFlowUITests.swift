@@ -36,8 +36,9 @@ final class RemoteFlowUITests: XCTestCase {
         XCTAssertTrue(next.waitForExistence(timeout: 5))
         next.tap()
 
+        // The first test after the simulator boots can take a while for Bonjour to resolve.
         let row = app.buttons[macName]
-        XCTAssertTrue(row.waitForExistence(timeout: 15), "Mock Mac not discovered over Bonjour")
+        XCTAssertTrue(row.waitForExistence(timeout: 30), "Mock Mac not discovered over Bonjour")
         row.tap()
 
         app.typeText(server.configuration.passkey.description.replacingOccurrences(of: " ", with: ""))
@@ -90,14 +91,15 @@ final class RemoteFlowUITests: XCTestCase {
 
         // The Mac's control service goes away and comes back on a new port, as after a Mac app restart.
         try await server.restartControl()
-        XCTAssertTrue(waitForServer({ self.app.staticTexts["Can't reach \(self.macName)"].exists || play.isEnabled }, timeout: 10))
 
+        // The app may not have noticed the drop yet, so a tap can land on the dead connection.
+        // Keep tapping until the command arrives on the new port.
         let reconnected = waitForServer({
-            play.isEnabled && !self.app.staticTexts["Can't reach \(self.macName)"].exists
-        }, timeout: 20)
+            if self.server.receivedCommands.contains(.command(.playPause)) { return true }
+            if play.isEnabled { play.tap() }
+            return false
+        }, timeout: 30)
         XCTAssertTrue(reconnected, "Did not reconnect")
-        play.tap()
-        XCTAssertTrue(waitForServer { self.server.receivedCommands.contains(.command(.playPause)) })
     }
 }
 

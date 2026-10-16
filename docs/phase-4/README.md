@@ -8,7 +8,7 @@ Status: automated tests built and running in CI. **Outstanding:** snapshot refer
 |---|---|---|---|
 | T1 | Unit tests with at least 80% line coverage of shared code | **Met.** 95.96% of lines, 64 tests in 13 suites | CI job "Shared package", step "Coverage report". The table is also in the run summary and the `shared-coverage` artifact. |
 | T2 | Protocol contract tests both sides run against | **Met.** Every fixture in `shared/Tests/AuvelProtocolTests/Fixtures` has a contract case, driven through `MacSessionLogic` and `ClientSessionLogic` | `shared/Tests/AuvelSessionTests/ContractTests.swift` |
-| T3 | UI tests for pairing, control and reconnect | Built. Pairing and reconnect pass in CI. Control is being fixed (F21). | `ios/Tests/UI/RemoteFlowUITests.swift` |
+| T3 | UI tests for pairing, control and reconnect | Built. Each test has passed in CI at least once, but never all three in the same run (F21, F24). | `ios/Tests/UI/RemoteFlowUITests.swift` |
 | T4 | Snapshot tests of key screens, light, dark and AX5 | Built. 9 screens × 3 variants = 27 images recorded in CI. **Blocked on Q12** before they can be committed and compared. | `ios/Tests/Unit/SnapshotTests.swift` |
 | T5 | Mock Mac server for tests without hardware | **Met.** Pairing listener, TLS-PSK control listener, Bonjour advertising, scripted state and failures | `shared/Sources/AuvelTestSupport/MockMacServer.swift`, `shared/Tests/AuvelTestSupportTests/MockMacServerTests.swift` |
 | T6 | Manual hardware matrix | Checklist ready, needs Matt | [T6-hardware-matrix.md](T6-hardware-matrix.md) |
@@ -27,7 +27,8 @@ Status: automated tests built and running in CI. **Outstanding:** snapshot refer
 2. **F20 Mock server test race.** The test client's 5 s timeout fired early when an earlier wait was cancelled. Test-only bug, fixed.
 3. **F21 Mute is a switch to XCUITest.** Mute carries the toggle trait (T7 V5), so UI tests find it under `switches`, not `buttons`. Test updated. Volume uses a vertical swipe on the dial, because XCUITest cannot send an adjustable increment on iOS.
 4. **F22 Coverage includes the mock server.** `AuvelTestSupport` is shared source, so it counts toward T1. Without it, coverage is 786 lines with 25 missed: 96.8%. The gate passes either way.
-5. **F23 CI artifacts unreachable from the build session.** The session's network blocks GitHub's artifact storage (`*.blob.core.windows.net`). Snapshots recorded on the runner cannot be pulled back. See Q12.
+5. **F24 UI test timing.** Run 20 showed two test races. The reconnect test could tap Play before the app had noticed the dropped connection, so it now retries until the command arrives. Bonjour discovery on a freshly booted simulator once took longer than 15 s, so the timeout is now 30 s. If discovery still flakes, the fallback is a debug-only launch argument that hands the app the mock's address directly.
+6. **F23 CI artifacts unreachable from the build session.** The session's network blocks GitHub's artifact storage (`*.blob.core.windows.net`). Snapshots recorded on the runner cannot be pulled back. See Q12.
 
 ## Questions
 
