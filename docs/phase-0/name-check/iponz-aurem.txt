@@ -1,0 +1,28 @@
+Log in
+Home >  Search Trade Mark case(s)
+Our trade mark register can be searched by case criteria such as owner, date or case number, and more. Please see our guide to online searching of the trade mark register.
+If you're searching for similar trade mark words or images, use Trade Mark Check.
+Search Criteria
+Trade Mark number(s) (incl. IRN)	
+Title	
+You can use wildcards * and ? to broaden your search. You can use combinations of AND, OR, NOT, brackets and quotation marks to create more advanced search queries.
+Word	Transliteration	Translation	All
+
+Vienna Classification	
+To search for image content you will need to use Vienna Classification Descriptors.
+Classification/Status Search
+Date Search
+Trade Mark Type Search
+Client Search
+ Search  -  Clear  |  Show/Hide All Advanced Fields
+
+
+ Close
+To search for multiple keywords, use combinations of AND, OR and NOT.
+
+Brackets can be used to construct more complex searches e.g. (orange OR apple) NOT (juice OR drink)
+255 characters max.
+Info
+Close
+Your search returned no results.
+Ok

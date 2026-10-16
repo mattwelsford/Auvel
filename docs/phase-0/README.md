@@ -8,7 +8,7 @@ Status: ready for review. No production code written.
 | P0.2 | [Wireframes](P0.2-wireframes.md), 6 iPhone + 3 Mac | Done. |
 | P0.3 | [Three directions, light and dark](P0.3-directions.md) | Done. Recommends A. |
 | P0.4 | [Journey map](P0.4-journey-map.md), 12 steps, 24 failure points | Done. |
-| P0.5 | [Name check and icons](P0.5-name-and-icon.md) | **Incomplete.** Register and domain checks blocked. Two icon sketches done. |
+| P0.5 | [Name check and icons](P0.5-name-and-icon.md) | Done. **AUREM fails US clearance (N1).** Icon I1 chosen. |
 
 Rendering note: SF Pro and SF Symbols cannot be used in this Linux environment. Inter and hand-drawn glyphs stand in. P1 high-fidelity work uses the real assets.
 
@@ -43,13 +43,17 @@ Matt's written answers, 2026-10-16.
 |---|---|---|
 | D1 | **Direction B (Dial)** approved. | Overrides the recommendation of A. Conditions for P1 are in R10. |
 | D2 | Journey map approved. | |
-| D3 | **Open.** | Waiting on register and domain checks. Matt is allowing the hosts. |
+| D3 | **Open. Name fails US clearance.** | Checks run 2026-10-16. Live US application AUREM in Class 9 for a mobile app (N1). NZ clear. aurem.app, aurem.com, getaurem.com all taken. Options O-n1 to O-n3 in [P0.5](P0.5-name-and-icon.md#options). |
 | D4 | v1 scope approved with the four changes listed below. | |
 | D5 | **Icon I1 (Signal)** approved. | Overrides the recommendation of I2. Must be redrawn at P1 to clear R9. |
 | Q1 | Price stays US$4.99. | |
 | Q3 | Matt holds touchbase.co.nz and kwa-moya.co.nz. Neither suits Aurem. A US-facing domain is needed. | Candidates to check: aurem.app, aurem.com, getaurem.com. auremapp.com is already in use (N2). |
 
-G0 status: **not passed**. D3 is the only open item.
+G0 status: **not passed**. D3 is the only open item and needs Q4.
+
+## Questions added after the decisions
+
+1. **Q4** Name: rename now (O-n1, recommended), keep Aurem without US registration (O-n2), or consult an attorney first (O-n3)?
 
 ## Risks added after the decisions
 
