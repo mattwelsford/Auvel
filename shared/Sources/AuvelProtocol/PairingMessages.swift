@@ -45,15 +45,29 @@ public struct PairHelloAck: Codable, Equatable, Sendable {
 public struct PairCommit: Codable, Equatable, Sendable {
     public var round: Int
     public var commitment: Data
+
+    public init(round: Int, commitment: Data) {
+        self.round = round
+        self.commitment = commitment
+    }
 }
 
 public struct PairReveal: Codable, Equatable, Sendable {
     public var round: Int
     public var nonce: Data
+
+    public init(round: Int, nonce: Data) {
+        self.round = round
+        self.nonce = nonce
+    }
 }
 
 public struct PairConfirm: Codable, Equatable, Sendable {
     public var mac: Data
+
+    public init(mac: Data) {
+        self.mac = mac
+    }
 }
 
 public enum PairFailureReason: String, Codable, Equatable, Sendable {
@@ -70,6 +84,10 @@ public enum PairFailureReason: String, Codable, Equatable, Sendable {
 
 public struct PairFailed: Codable, Equatable, Sendable {
     public var reason: PairFailureReason
+
+    public init(reason: PairFailureReason) {
+        self.reason = reason
+    }
 }
 
 public enum PairMessage: Equatable, Sendable {
