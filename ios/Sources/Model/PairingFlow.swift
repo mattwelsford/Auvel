@@ -50,9 +50,11 @@ final class PairingFlow {
     }
 
     private func run(_ passkey: Passkey) async {
-        // The pairing service appears only while the Mac's pairing window is open. Give Bonjour a moment.
+        // The pairing service appears only while the Mac's pairing window is open. Bonjour can take
+        // several seconds to report it, so wait up to 10 s before telling the user the Mac is not ready.
         var endpoint = pairingBrowser.macs[mac.id]?.endpoint
-        for _ in 0..<20 where endpoint == nil {
+        let deadline = ContinuousClock.now + .seconds(10)
+        while endpoint == nil, ContinuousClock.now < deadline {
             try? await Task.sleep(for: .milliseconds(150))
             endpoint = pairingBrowser.macs[mac.id]?.endpoint
         }
