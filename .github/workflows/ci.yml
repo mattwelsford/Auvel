@@ -222,6 +222,16 @@ jobs:
             -only-testing:AuvelUITests/RealMacUITests \
             -resultBundlePath E2E.xcresult \
             CODE_SIGNING_ALLOWED=NO
+      - name: Test summary
+        if: always()
+        working-directory: ios
+        run: |
+          [ -d E2E.xcresult ] || exit 0
+          xcrun xcresulttool get test-results summary --path E2E.xcresult --compact | python3 -c '
+          import json, sys
+          d = json.load(sys.stdin)
+          print({k: d.get(k) for k in ("result", "totalTestCount", "passedTests", "failedTests", "skippedTests")})
+          '
       - name: Print test failures
         if: failure()
         working-directory: ios
@@ -241,4 +251,8 @@ jobs:
           '
       - name: Mac app log
         if: always()
-        run: log show --last 15m --style compact --predicate 'process == "Auvel" AND (eventMessage CONTAINS "Auvel:" OR category == "listener" OR category == "connection")' | tail -150
+        run: |
+          echo "--- Auvel messages"
+          log show --last 15m --style compact --info --predicate 'process == "Auvel"' | grep "Auvel:" || echo "(none)"
+          echo "--- Network"
+          log show --last 15m --style compact --predicate 'process == "Auvel" AND (category == "listener" OR category == "connection")' | grep -E "inbound|reporting state|cancel\]|bytes in" | tail -60
