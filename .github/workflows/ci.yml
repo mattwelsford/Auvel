@@ -213,8 +213,9 @@ jobs:
         run: |
           APP=$(find build/Build/Products/Debug -maxdepth 1 -name '*.app' | head -1)
           echo "Launching $APP"
-          # Run the binary directly so NSLog output lands in mac.log.
-          nohup "$APP/Contents/MacOS/Auvel" -AuvelE2EPasskey 123456 > "$RUNNER_TEMP/mac.log" 2>&1 &
+          # Launch through LaunchServices: a binary started straight from the shell gets no Bonjour adverts.
+          # --stderr keeps the app's NSLog output.
+          open -n --stdout "$RUNNER_TEMP/mac.log" --stderr "$RUNNER_TEMP/mac.log" "$APP" --args -AuvelE2EPasskey 123456
           sleep 5
           pgrep -fl "Debug/Auvel.app" || { echo "::error::Mac app is not running"; exit 1; }
           echo "Computer name: $(scutil --get ComputerName)"
