@@ -207,7 +207,8 @@ jobs:
         run: |
           APP=$(find build/Build/Products/Debug -maxdepth 1 -name '*.app' | head -1)
           echo "Launching $APP"
-          open -n "$APP" --args -AuvelE2EPasskey 123456
+          # Run the binary directly so NSLog output lands in mac.log.
+          nohup "$APP/Contents/MacOS/Auvel" -AuvelE2EPasskey 123456 > "$RUNNER_TEMP/mac.log" 2>&1 &
           sleep 5
           pgrep -fl "Debug/Auvel.app" || { echo "::error::Mac app is not running"; exit 1; }
           echo "Computer name: $(scutil --get ComputerName)"
@@ -253,6 +254,6 @@ jobs:
         if: always()
         run: |
           echo "--- Auvel messages"
-          log show --last 15m --style compact --info --predicate 'process == "Auvel"' | grep "Auvel:" || echo "(none)"
+          grep "Auvel:" "$RUNNER_TEMP/mac.log" || echo "(none)"
           echo "--- Network"
           log show --last 15m --style compact --predicate 'process == "Auvel" AND (category == "listener" OR category == "connection")' | grep -E "inbound|reporting state|cancel\]|bytes in" | tail -60

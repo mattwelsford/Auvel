@@ -46,6 +46,10 @@ final class RealMacUITests: XCTestCase {
             RunLoop.current.run(until: Date().addingTimeInterval(0.25))
         }
         XCTAssertTrue(play.isEnabled, "Remote did not connect to the Mac after pairing. \(screen("remote"))")
+
+        // Proof the control session carries traffic: the command reaches the Mac and the Mac answers.
+        play.tap()
+        XCTAssertTrue(play.isEnabled, "Connection dropped after a command. \(screen("after command"))")
     }
 
     /// Attaches a screenshot and returns the visible text, so the CI log shows what the app showed.

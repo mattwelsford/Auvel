@@ -32,7 +32,10 @@ final class AppModel {
         audio.onChange = { [weak self] _ in self?.server.broadcastState() }
         server.execute = { [weak self] message in self?.execute(message) ?? .internalError }
         server.currentState = { [weak self] in self?.macState ?? MacState(volume: 0, muted: false, volumeSettable: false, outputName: "", mediaKeysAllowed: false) }
-        server.onConnectedChange = { [weak self] phones in self?.connected = phones }
+        server.onConnectedChange = { [weak self] phones in
+            NSLog("Auvel: \(phones.count) iPhone(s) connected")
+            self?.connected = phones
+        }
         server.onLocalNetworkDenied = { [weak self] denied in self?.localNetworkDenied = denied }
         pairing.onChange = { [weak self] phase in self?.pairingPhase = phase }
         pairing.onPaired = { [weak self] result in self?.store(result) }
