@@ -178,16 +178,6 @@ jobs:
             -project AuvelMac.xcodeproj -scheme AuvelMac -configuration Debug \
             -destination generic/platform=macOS -derivedDataPath build \
             CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=
-      - name: Launch Mac app with pairing open
-        working-directory: mac
-        run: |
-          APP=$(find build/Build/Products/Debug -maxdepth 1 -name '*.app' | head -1)
-          echo "Launching $APP"
-          open -n "$APP" --args -AuvelE2EPasskey 123456
-          sleep 5
-          pgrep -fl "Debug/Auvel.app" || { echo "::error::Mac app is not running"; exit 1; }
-          echo "Computer name: $(scutil --get ComputerName)"
-          dns-sd -B _auvel-pair._tcp & sleep 3; kill $! || true
       - name: Pick the newest iPhone Pro simulator
         id: sim
         run: |
@@ -205,13 +195,30 @@ jobs:
           print(best[1])
           ')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Build iPhone app and UI tests
+        working-directory: ios
+        run: |
+          xcodebuild build-for-testing -quiet \
+            -project Auvel.xcodeproj -scheme Auvel \
+            -destination "id=${{ steps.sim.outputs.udid }}" -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+      - name: Launch Mac app with pairing open
+        working-directory: mac
+        run: |
+          APP=$(find build/Build/Products/Debug -maxdepth 1 -name '*.app' | head -1)
+          echo "Launching $APP"
+          open -n "$APP" --args -AuvelE2EPasskey 123456
+          sleep 5
+          pgrep -fl "Debug/Auvel.app" || { echo "::error::Mac app is not running"; exit 1; }
+          echo "Computer name: $(scutil --get ComputerName)"
+          dns-sd -B _auvel-pair._tcp & sleep 3; kill $! || true
       - name: Pair and connect from the simulator
         working-directory: ios
         run: |
           export TEST_RUNNER_AUVEL_E2E_MAC_NAME="$(scutil --get ComputerName)"
-          xcodebuild test -quiet \
+          xcodebuild test-without-building -quiet \
             -project Auvel.xcodeproj -scheme Auvel \
-            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -destination "id=${{ steps.sim.outputs.udid }}" -derivedDataPath build \
             -only-testing:AuvelUITests/RealMacUITests \
             -resultBundlePath E2E.xcresult \
             CODE_SIGNING_ALLOWED=NO
@@ -234,4 +241,4 @@ jobs:
           '
       - name: Mac app log
         if: always()
-        run: log show --last 15m --style compact --predicate 'process == "Auvel"' | grep -v "^Filtering" | tail -200
+        run: log show --last 15m --style compact --predicate 'process == "Auvel" AND (eventMessage CONTAINS "Auvel:" OR category == "listener" OR category == "connection")' | tail -150
