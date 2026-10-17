@@ -185,7 +185,7 @@ jobs:
           echo "Launching $APP"
           open -n "$APP" --args -AuvelE2EPasskey 123456
           sleep 5
-          pgrep -fl AuvelMac || { echo "::error::Mac app is not running"; exit 1; }
+          pgrep -fl "Debug/Auvel.app" || { echo "::error::Mac app is not running"; exit 1; }
           echo "Computer name: $(scutil --get ComputerName)"
           dns-sd -B _auvel-pair._tcp & sleep 3; kill $! || true
       - name: Pick the newest iPhone Pro simulator
@@ -234,4 +234,4 @@ jobs:
           '
       - name: Mac app log
         if: always()
-        run: log show --last 15m --style compact --predicate 'process == "AuvelMac"' | grep -v "^Filtering" | tail -200
+        run: log show --last 15m --style compact --predicate 'process == "Auvel"' | grep -v "^Filtering" | tail -200
