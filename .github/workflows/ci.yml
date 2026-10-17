@@ -115,6 +115,9 @@ jobs:
           print("Simulator:", best[2], best[0], file=sys.stderr)
           ')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          # Boot now so Bonjour in the simulator is warm by the time the UI tests look for a Mac.
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
       - name: Test
         working-directory: ios
         run: |
@@ -195,6 +198,9 @@ jobs:
           print(best[1])
           ')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          # Boot now so Bonjour in the simulator is warm by the time the UI tests look for a Mac.
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
       - name: Build iPhone app and UI tests
         working-directory: ios
         run: |
@@ -213,6 +219,7 @@ jobs:
           pgrep -fl "Debug/Auvel.app" || { echo "::error::Mac app is not running"; exit 1; }
           echo "Computer name: $(scutil --get ComputerName)"
           dns-sd -B _auvel-pair._tcp & sleep 3; kill $! || true
+          dns-sd -B _auvel._tcp & sleep 3; kill $! || true
       - name: Pair and connect from the simulator
         working-directory: ios
         run: |
