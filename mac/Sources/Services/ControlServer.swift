@@ -45,6 +45,13 @@ final class ControlServer {
             listener.stateUpdateHandler = { [weak self] state in
                 MainActor.assumeIsolated { self?.listenerChanged(state) }
             }
+            listener.serviceRegistrationUpdateHandler = { change in
+                switch change {
+                case .add(let endpoint): NSLog("Auvel: advertising control service \(endpoint)")
+                case .remove(let endpoint): NSLog("Auvel: stopped advertising control service \(endpoint)")
+                @unknown default: break
+                }
+            }
             listener.newConnectionHandler = { [weak self] connection in
                 MainActor.assumeIsolated { self?.accept(connection) }
             }
@@ -65,6 +72,7 @@ final class ControlServer {
     private func listenerChanged(_ state: NWListener.State) {
         switch state {
         case .waiting(let error), .failed(let error):
+            NSLog("Auvel: control listener \(state): \(error)")
             if case .dns(let code) = error, code == DNSServiceErrorType(kDNSServiceErr_PolicyDenied) {
                 onLocalNetworkDenied(true)
             }

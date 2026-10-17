@@ -47,6 +47,15 @@ final class PairingHost {
         listener.newConnectionHandler = { [weak self] connection in
             MainActor.assumeIsolated { self?.accept(connection) }
         }
+        listener.stateUpdateHandler = { state in
+            switch state {
+            case .waiting(let error), .failed(let error): NSLog("Auvel: pairing listener \(state): \(error)")
+            default: break
+            }
+        }
+        listener.serviceRegistrationUpdateHandler = { change in
+            if case .add(let endpoint) = change { NSLog("Auvel: advertising pairing service \(endpoint)") }
+        }
         listener.start(queue: .main)
         self.listener = listener
         newCode(failures: 0)
